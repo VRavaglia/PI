@@ -4,7 +4,7 @@ pBrands = ['nvidia', 'amd']
 brands = pBrands + ['cooler_master', 'evga', 'corsair', 'thermaltake', 'pcyes', 'gigabyte',
 			'aerocool', 'redragon', 'patriot', 'hyperx', 'crucial', 'msi', 'galax', 'pny',
 			'deepcool', 'afox','colorful', 'biostar', 'seagate', 'sandisk', 'kingston',
-			'western_digital', 'toshiba', 'hikvision', 'nzxt', 'lian_li']
+			'western_digital', 'toshiba', 'hikvision', 'nzxt', 'lian_li', 'Unknown']
 
 def initCat(brands):
 	catalog = dict()

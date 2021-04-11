@@ -1,6 +1,7 @@
 
 from enum import Enum
 import kabum as kb
+import sys
 from pprint import pprint
 
 Lojas = Enum('Loja', 'kabum terabyteshop')
@@ -15,7 +16,8 @@ def listar_todos_por_tipo(loja, tipo_peca):
 
 
 def main():
-    pecas = listar_todos_por_tipo(Lojas.kabum, 'mobo')
+    print(sys.argv[1])
+    pecas = listar_todos_por_tipo(Lojas.kabum, sys.argv[1])
     pprint(pecas)
 
 if __name__ == "__main__":

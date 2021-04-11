@@ -1,17 +1,23 @@
 kabum_base = 'https://www.kabum.com.br/'
 kabum_mobo = kabum_base + 'hardware/placas-mae?pagina=1&ordem=5&limite=1000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_psu = kabum_base + 'hardware/fontes?pagina=1&ordem=5&limite=1000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_ram = kabum_base + 'hardware/memoria-ram?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_cpu = kabum_base + 'hardware/processadores?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_gpu = kabum_base + 'hardware/placa-de-video-vga?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_case = kabum_base + 'perifericos/gabinetes?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_cooler = kabum_base + 'hardware/coolers?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from enum import Enum
 import json
 
-DEBUG = True
+DEBUG = False
 
 def listar_todos_por_tipo(tipo):
-    url = {'mobo' : kabum_mobo}
+    url = {'mobo' : kabum_mobo, 'psu' : kabum_psu, 'ram' : kabum_ram, 'cpu' : kabum_cpu, 'gpu' : kabum_gpu, 'case' : kabum_case, 'cooler': kabum_cooler}
 
-    arquivo_debug = tipo + "debug.html"
+    arquivo_debug = "kb_" + tipo + "_debug.html"
     
     if not DEBUG:
         html = urlopen(url[tipo])
@@ -38,7 +44,13 @@ def listar_todos_por_tipo(tipo):
 
     produtos = []
 
+    arquivo_parseado = "kb_" + tipo + "_parseado.txt"
+    f = open(arquivo_parseado, "w") 
+
     for produto in dados:
         produtos.append({'nome': produto['nome'],'preco': produto['preco'], 'preco_desconto': produto['preco_desconto'], 'link': produto['link_descricao']})
+
+    f.write(str(produtos))
+    f.close()
 
     return produtos

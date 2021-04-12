@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from enum import Enum
 import json
 
-DEBUG = False
+DEBUG = True
 
 def listar_todos_por_tipo(tipo):
     url = {'mobo' : kabum_mobo, 'psu' : kabum_psu, 'ram' : kabum_ram, 'cpu' : kabum_cpu, 'gpu' : kabum_gpu, 'case' : kabum_case, 'cooler': kabum_cooler}

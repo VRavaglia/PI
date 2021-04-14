@@ -6,7 +6,8 @@ from pprint import pprint
 
 Lojas = Enum('Loja', 'kabum terabyteshop')
 
-# [string produto,real preço cartao,real  preço boleto] = webscrape(enum site, enum tipo_peça)
+# retorna uma lista de todos os produtos encontrados de um dado tipo
+# [string produto,real preço cartao,real  preço boleto] = listar_todos_por_tipo(str site, str tipo_peça)
 def listar_todos_por_tipo(loja, tipo_peca):
     pecas = []
     if loja == Lojas.kabum: # trocar por um case quando a tb for adicionada

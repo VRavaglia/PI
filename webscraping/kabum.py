@@ -29,7 +29,7 @@ def listar_todos_por_tipo(tipo):
     # o arquivo html local esta sempre sendo criado
     # idealmente apenas se em debug o arquivo seria criado
 
-    f = open(arquivo_debug, "r") 
+    f = open(arquivo_debug, "r", encoding='latin-1') 
     linhas = f.readlines()
     f.close()
 

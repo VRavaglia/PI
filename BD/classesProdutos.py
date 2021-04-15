@@ -7,6 +7,14 @@ class Produto:
 		self.modelo = modelo
 		self.marca = marca
 
+	def parametros(self):
+		print('Nome: {}'.format(self.nome))
+		print('Preco: R${}'.format(self.preco))
+		print('Desconto: R${}'.format(self.preco_desconto))
+		print('Link: {}'.format(self.link))
+		print('Modelo: {}'.format(self.modelo))
+		print('Marca: {}'.format(self.marca))
+
 class Mobo(Produto):
 	def __init__(self, nome, preco, preco_desconto, link, modelo, marca, chipset, socket, tamanho, ddr):
 		super().__init__(self, nome, preco, preco_desconto, link, modelo, marca)
@@ -40,12 +48,7 @@ class Ram(Produto):
 		self.quantidade = quantidade
 
 	def parametros(self):
-		print('Nome: {}'.format(self.nome))
-		print('Preco: R${}'.format(self.preco))
-		print('Desconto: R${}'.format(self.preco_desconto))
-		print('Link: {}'.format(self.link))
-		print('Modelo: {}'.format(self.modelo))
-		print('Marca: {}'.format(self.marca))
+		super().parametros()
 		print('Capacidade: {}'.format(self.capacidade))
 		print('Frequência: {}'.format(self.frequencia))
 		print('Tamanho: {}'.format(self.tamanho))

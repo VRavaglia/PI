@@ -4,6 +4,7 @@ import re
 from main import main_bypasser
 from classesProdutos import *
 from func import exMarca, normString
+from pprint import pprint
 
 pBrands = ['nvidia', 'amd']
 brands = pBrands + ['cooler_master', 'evga', 'corsair', 'thermaltake', 'pcyes', 'gigabyte',
@@ -75,4 +76,5 @@ if __name__ == '__main__':
 	for prod in ram_list[1][:10]:
 		#if prod.marca == 'Unknown':
 		prod.parametros()
+		#pprint(vars(prod))
 		print('-'*50)

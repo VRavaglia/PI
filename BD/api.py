@@ -4,39 +4,55 @@ from datetime import datetime
 
 database = 'main.sqlite'
 
-def class2str(atributos):
+def getChaves(produto):
+    chaves = [a for a in dir(produto) if (not a.startswith('__') and a != 'tipo')]
+    return chaves
+
+def class2val(produto):
+    chaves = getChaves(produto)
+
     valores = ''
 
-    for valor in atributos:
+    for chave in chaves:
+        valor = produto.__dict__[chave]
+
         if type(valor) is int or type(valor) is float:
             valores = valores + ', ' + str(valor)
         else:
             valores = valores + ', \'' + valor + '\''
+    
     valores = valores[2:]
     return valores
 
+def class2chave(produto):
+    chaves = getChaves(produto)
 
-def inserirMobo(mobo):
+    chavesStr = ''
+
+    for chave in chaves:
+        chavesStr = chavesStr + ', ' + chave
+
+    chavesStr = chavesStr[2:]
+
+    return chavesStr
+
+
+def inserirProduto(produto):
     con = sqlite3.connect(database)
     cur = con.cursor()
 
-    valores = class2str( [mobo.site, \
-                        mobo.nome, \
-                        mobo.preco, \
-                        mobo.preco_desconto, \
-                        mobo.link, \
-                        mobo.modelo, \
-                        mobo.marca, \
-                        mobo.chipset, \
-                        mobo.socket, \
-                        mobo.tamanho, \
-                        mobo.ddr])
-
+    valores = class2val(produto)
     data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
     valores = '(' + valores + ', \'' + data + '\'' +')'
 
-    cur.execute("INSERT INTO Mobo VALUES " + valores)
+    chaves = class2chave(produto)
+    chaves = '(' + chaves + ', data)'
+
+    insercao = "INSERT INTO " + produto.tipo + " " + chaves +" VALUES " + valores
+
+    print(insercao)
+
+    cur.execute(insercao)
 
     con.commit()
     con.close()

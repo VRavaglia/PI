@@ -15,6 +15,7 @@ class Mobo(Produto):
         self.socket = socket
         self.tamanho = tamanho
         self.ddr = ddr
+        self.tipo = 'Mobo'
 
 class Psu(Produto):
     def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, selo, potencia, modularidade):
@@ -22,6 +23,7 @@ class Psu(Produto):
         self.selo = selo
         self.potencia = potencia
         self.modulariade = modulariade
+        self.tipo = 'Psu'
 
 class Cpu(Produto):
     def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, socket, frequencia, integrada):
@@ -29,6 +31,8 @@ class Cpu(Produto):
         self.socket = socket
         self.frequencia = frequencia
         self.integrada = integrada
+        self.tipo = 'Cpu'
+
 
 class Ram(Produto):
     def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, capacidade, frequencia, ddr, latencia, quantidade):
@@ -38,6 +42,8 @@ class Ram(Produto):
         self.ddr = ddr
         self.latencia = latencia
         self.quantidade = quantidade
+        self.tipo = 'Ram'
+
 
 class Hd(Produto):
     def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, dimensoes, ssd, nvme, sata):
@@ -46,14 +52,19 @@ class Hd(Produto):
         self.ssd = ssd
         self.nvme = nvme
         self.sata = sata
+        self.tipo = 'Hd'
+
 
 class Gpu(Produto):
     def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, fabricante, vram):
         super().__init__(site, nome, preco, preco_desconto, link, modelo, marca)
         self.fabricante = fabricante
         self.vram = vram
+        self.tipo = 'Gpu'
+
 
 class Case(Produto):
     def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, fabricante, tamanho):
         super().__init__(site, nome, preco, preco_desconto, link, modelo, marca)
         self.tamanho = fabricant
+        self.tipo = 'Case'

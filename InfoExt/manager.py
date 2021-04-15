@@ -103,12 +103,48 @@ def manageProd(products,plist):
 									vram,
 									info_adicionais))
 
+		elif p_type == 'mobo':
+			socket = re.search(r'(LGA(\s)?[1-9][0-9]+|AM4)', nome)
+			if socket:
+				socket = socket.group()
+			chipset = re.search(r'([A-Z])[1-9][0-9]+M', nome)			#conferir (A-Z)
+			if chipset:
+				chipset = chipset.group()
+			tamanho = re.search(r'[1-9]([0-9]+)?(GB|TB)', nome)
+			if tamanho:
+				tamanho = tamanho.group()
+			ddr = re.search(r'DDR(-)?[1-9]([0-9]+)?(-[0-9]+)?', nome)
+			if ddr:
+				ddr = ddr.group()
+			modelo = nome.split(' - ')[-1]
+			info_adicionais = nome.split(',')[0]
+			aux = normString(info_adicionais,marca)
+			if aux:
+				info_adicionais = aux
+			info_adicionais = info_adicionais.split(' ')
+			info_adicionais = [i for i in info_adicionais if i.lower() != marca]
+			removables = [ddr, tamanho, chipset, modelo]			#mais comportados
+			info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
+
+			p_list.append(Mobo('kabum.com.br',#site,
+									nome,
+									preco,
+									desconto,
+									link,
+									modelo,
+									marca,
+									chipset,
+									socket,
+									tamanho,
+									ddr,
+									info_adicionais))
+
 if __name__ == '__main__':
 	from random import randint
 
 	#catalogo = initCat(brands)
 	#print(brands)
-	p_type = 'gpu'#'ram'
+	p_type = 'mobo'#'ram'
 	pecas = main_bypasser(p_type)
 	pprint(pecas[:10])
 	prod_list = (p_type, list())

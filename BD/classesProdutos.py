@@ -22,14 +22,25 @@ class Produto:
 		print('Info Adicionais: {}'.format(self.info_ad))
 
 class Mobo(Produto):
-	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, chipset, socket, tamanho, ddr):
-		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca)
+	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, chipset, socket, tamanho, ddr, info_adicionais):
+		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca, info_adicionais)
 		self.chipset = chipset
 		self.socket = socket
 		self.tamanho = tamanho
 		self.ddr = ddr
 		self.tipo = 'Mobo'
 
+	def parametros(self):
+		super().parametros()
+		print('Chipset: {}'.format(self.chipset))
+		print('Socket: {}'.format(self.socket))
+		print('DDR: {}'.format(self.ddr))
+		print('Tamanho: {}'.format(self.tamanho))
+		if self.info_ad:
+			self.info_adicionais()
+
+	def info_adicionais(self):
+		super().info_adicionais()
 class Psu(Produto):
 	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, selo, potencia, modularidade):
 		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca)

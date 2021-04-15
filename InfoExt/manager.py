@@ -12,7 +12,7 @@ brands = pBrands + ['cooler_master', 'evga', 'corsair', 'thermaltake', 'pcyes', 
 			'deepcool', 'afox','colorful', 'biostar', 'seagate', 'sandisk', 'kingston',
 			'western_digital', 'toshiba', 'hikvision', 'nzxt', 'lian_li', 'xpg', 'husky',
 			'hp', 'lexar', 'ocpc', 'adata', 'g_skill', 'asus', 'gainward', 'zotac',
-			'sapphire', 'asrock', 'xfx', 'powercolor']#, 'Unknown']
+			'sapphire', 'asrock', 'xfx', 'powercolor', 'intel']#, 'Unknown']
 
 def initCat(brands):
 	catalog = dict()
@@ -139,12 +139,42 @@ def manageProd(products,plist):
 									ddr,
 									info_adicionais))
 
+		elif p_type == 'cpu':
+			socket = re.search(r'(LGA(\s)?[1-9][0-9]+|AM4)', nome)
+			if socket:
+				socket = socket.group()
+			frequencia = re.search(r'[1-9]((\.)?[0-9]+)?\s?(M|G)(H|h)z(\s?\([1-9]\.[0-9]+G(H|h)z(\s(M|m)ax)?(\s(T|t)urbo)?\))?', nome)
+			if frequencia:
+				frequencia = frequencia.group()
+			integrada = None
+			modelo = nome.split(' - ')[-1]
+			info_adicionais = nome.split(',')[0]
+			aux = normString(info_adicionais,marca)
+			if aux:
+				info_adicionais = aux
+			info_adicionais = info_adicionais.split(' ')
+			info_adicionais = [i for i in info_adicionais if i.lower() != marca]
+			removables = [frequencia, integrada, socket, modelo]			#mais comportados
+			info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
+
+			p_list.append(Cpu('kabum.com.br',#site,
+									nome,
+									preco,
+									desconto,
+									link,
+									modelo,
+									marca,
+									socket,
+									frequencia,
+									integrada,
+									info_adicionais))
+
 if __name__ == '__main__':
 	from random import randint
 
 	#catalogo = initCat(brands)
 	#print(brands)
-	p_type = 'mobo'#'ram'
+	p_type = 'cpu'#'ram'
 	pecas = main_bypasser(p_type)
 	pprint(pecas[:10])
 	prod_list = (p_type, list())

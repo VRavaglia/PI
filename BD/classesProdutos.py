@@ -41,6 +41,7 @@ class Mobo(Produto):
 
 	def info_adicionais(self):
 		super().info_adicionais()
+
 class Psu(Produto):
 	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, selo, potencia, modularidade):
 		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca)
@@ -50,12 +51,23 @@ class Psu(Produto):
 		self.tipo = 'Psu'
 
 class Cpu(Produto):
-	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, socket, frequencia, integrada):
-		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca)
+	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, socket, frequencia, integrada, info_adicionais):
+		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca, info_adicionais)
 		self.socket = socket
 		self.frequencia = frequencia
 		self.integrada = integrada
 		self.tipo = 'Cpu'
+
+	def parametros(self):
+		super().parametros()
+		print('Socket: {}'.format(self.socket))
+		print('Frequência: {}'.format(self.frequencia))
+		print('Integrada: {}'.format(self.integrada))
+		if self.info_ad:
+			self.info_adicionais()
+
+	def info_adicionais(self):
+		super().info_adicionais()
 
 class Ram(Produto):
 	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, capacidade, frequencia, ddr, latencia, quantidade,info_adicionais):

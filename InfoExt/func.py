@@ -20,7 +20,7 @@ def normString(string, brand):
 		return None
 	return re.sub(regex_str, brand, string, flags=re.IGNORECASE)
 
-def exMarcas(strs, catalog):
+def exMarcas(strs, catalog):####OLD########
 	for s in strs:
 		found = False
 		for key in catalog.keys():
@@ -38,6 +38,17 @@ def exMarcas(strs, catalog):
 				break
 		if not found:
 			catalog['Unknown'].append(s)
+
+def exMarca(string, brands):####NEW####
+	found = False
+	for brand in brands:
+		if '_' in slicer(brand):
+			n_string = normString(string,brand)
+			if n_string:
+				return brand
+		elif brand in string.lower().split():
+			return brand
+	return 'Unknown'
 
 def rPrioridade(catalog, pBrands=['dell','lenovo']):
 	for key in catalog.keys() - pBrands:

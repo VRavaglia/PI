@@ -1,11 +1,11 @@
 kabum_base = 'https://www.kabum.com.br/'
 kabum_mobo = kabum_base + 'hardware/placas-mae?pagina=1&ordem=5&limite=1000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
 kabum_psu = kabum_base + 'hardware/fontes?pagina=1&ordem=5&limite=1000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
-kabum_ram = kabum_base + 'hardware/memoria-ram?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
-kabum_cpu = kabum_base + 'hardware/processadores?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
-kabum_gpu = kabum_base + 'hardware/placa-de-video-vga?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
-kabum_case = kabum_base + 'perifericos/gabinetes?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
-kabum_cooler = kabum_base + 'hardware/coolers?pagina=1&ordem=5&limite=100&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_ram = kabum_base + 'hardware/memoria-ram?pagina=1&ordem=5&limite=1000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_cpu = kabum_base + 'hardware/processadores?pagina=1&ordem=5&limite=1000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_gpu = kabum_base + 'hardware/placa-de-video-vga?pagina=1&ordem=5&limite=1000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_case = kabum_base + 'perifericos/gabinetes?pagina=1&ordem=5&limite=1000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
+kabum_cooler = kabum_base + 'hardware/coolers?pagina=1&ordem=5&limite=1000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]'
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup

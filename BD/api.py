@@ -5,7 +5,8 @@ from datetime import datetime
 database = 'main.sqlite'
 
 def getChaves(produto):
-    chaves = [a for a in dir(produto) if (not a.startswith('__') and a != 'tipo')]
+    chaves = [a for a in dir(produto) if (not a.startswith('__') and a != 'tipo' and a != 'info_adicionais'and a != 'parametros' and a != 'info_ad')]
+    print(chaves)
     return chaves
 
 def class2val(produto):

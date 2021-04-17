@@ -20,6 +20,7 @@ def main():
 	print(sys.argv[1])
 	pecas = listar_todos_por_tipo(Lojas.kabum, sys.argv[1])
 	pprint(pecas)
+	print(len(pecas))
 	#return pecas
 
 if __name__ == "__main__":

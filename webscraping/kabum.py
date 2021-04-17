@@ -69,29 +69,28 @@ def listar_todos_por_tipo(tipo):
         preco_anterior = 0
         prod_anterior = []
 
-
-
         for produto in dados:
             cnt_pronduto = cnt_pronduto + 1
-            produtos.append({'nome': produto['nome'],'preco': produto['preco'], 'preco_desconto': produto['preco_desconto'], 'link': produto['link_descricao']})
+            if produto['disponibilidade']:
+                produtos.append({'nome': produto['nome'],'preco': produto['preco'], 'preco_desconto': produto['preco_desconto'], 'link': produto['link_descricao']})
 
         f.write(str(produtos))
         f.close()
 
-    idx_max = -1
-    idx = -1
-    preco_max = -1
+    # idx_max = -1
+    # idx = -1
+    # preco_max = -1
 
-    for produto in produtos:
-        print(produto['preco_desconto'])
-        idx = idx + 1
+    # for produto in produtos:
+    #     print(produto['preco_desconto'])
+    #     idx = idx + 1
 
-        if produto['preco_desconto'] >= preco_max:
-            preco_max = produto['preco_desconto']
-            idx_max = idx
+    #     if produto['preco_desconto'] >= preco_max:
+    #         preco_max = produto['preco_desconto']
+    #         idx_max = idx
     
-    print(produtos[idx_max], idx_max)
+    # print(produtos[idx_max], idx_max)
 
-    produtos = produtos[0:idx_max+1]
+    # produtos = produtos[0:idx_max+1]
 
     return produtos

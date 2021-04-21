@@ -129,7 +129,16 @@ class Gpu(Produto):
 
 
 class Case(Produto):
-	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, fabricante, tamanho):
-		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca)
-		self.tamanho = fabricante
+	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, tamanho, info_adicionais):
+		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca, info_adicionais)
+		self.tamanho = tamanho
 		self.tipo = 'Case'
+
+	def parametros(self):
+		super().parametros()
+		print('Tamanho: {}'.format(self.tamanho))
+		if self.info_ad:
+			self.info_adicionais()
+
+	def info_adicionais(self):
+		super().info_adicionais()

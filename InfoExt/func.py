@@ -15,7 +15,7 @@ def normString(string, brand):
 	if '_' not in slicer(brand):
 		return None
 	split_brand = brand.split('_')
-	regex_str = r'[.|\s|-]'.join(split_brand)
+	regex_str = r'(.|\s|-)?'.join(split_brand)
 	if not re.search(regex_str, string.lower()):
 		return None
 	return re.sub(regex_str, brand, string, flags=re.IGNORECASE)

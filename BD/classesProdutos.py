@@ -43,12 +43,20 @@ class Mobo(Produto):
 		super().info_adicionais()
 
 class Psu(Produto):
-	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, selo, potencia, modularidade):
-		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca)
+	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, selo, potencia, modularidade,info_adicionais):
+		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca,info_adicionais)
 		self.selo = selo
 		self.potencia = potencia
-		self.modulariade = modulariade
+		self.modularidade = modularidade
 		self.tipo = 'Psu'
+
+	def parametros(self):
+		super().parametros()
+		print('Selo: {}'.format(self.selo))
+		print('Potência: {}'.format(self.potencia))
+		print('Modularidade: {}'.format(self.modularidade))
+		if self.info_ad:
+			self.info_adicionais()
 
 class Cpu(Produto):
 	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, socket, frequencia, integrada, info_adicionais):

@@ -12,7 +12,9 @@ brands = ['cooler_master', 'evga', 'corsair', 'thermaltake', 'pcyes', 'gigabyte'
 			'deepcool', 'afox','colorful', 'biostar', 'seagate', 'sandisk', 'kingston',
 			'western_digital', 'toshiba', 'hikvision', 'nzxt', 'lian_li', 'xpg', 'husky',
 			'hp', 'lexar', 'ocpc', 'adata', 'g_skill', 'asus', 'gainward', 'zotac',
-			'sapphire', 'asrock', 'xfx', 'powercolor', 'intel'] + pBrands
+			'sapphire', 'asrock', 'xfx', 'powercolor', 'intel', 'one_power', 'gamemax',
+			'c3_tech', 'brazil_pc', 'seasonic', 'cougar', 'bluecase', 'apex_gaming',
+			'sharkoon', 'powerx', 'nox', 't-dagger', 'fortrek', 'c3_plus'] + pBrands
 
 regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)(H|h)z(\s?\([1-9]\.?[0-9]+G(H|h)z(\s(M|m)ax)?(\s((T|t)urbo|(B|b)oost))?\))?',
 				'ddr': r'DDR(-)?[1-9]([0-9]+)?(-[0-9]+)?', 'vram': [r'[1-9]([0-9]+)?GB', r'[1-9]([0-9]+)?G'],
@@ -20,8 +22,9 @@ regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)(H|h)z(\s?\([1-9]\.?[0-9]+
 				'capacidade': r'[1-9]([0-9]+)?(GB|TB)', 'chipset': r'(([A-Z])[1-9][0-9]+M|(B|Z)(4|5)(5|6|9)0|X570)',
 				'tamanho': r'((E|e)xtended|(m|M)(icro|ini)?|u)?(\s|-)?(A|S|D|I)TX',
 				'quantidade': r'[1-9](x|X)[1-9]([0-9]+)?(GB)?',
-				'integrada': [r'((I|i)ntel\s)?HD\s(G|g)raphics', r'[1-9][0-9]+G']		#intel/amd
-				}
+				'integrada': [r'((I|i)ntel\s)?HD\s(G|g)raphics', r'[1-9][0-9]+G'],		#intel/amd
+				'potencia': r'[1-9]([0-9]+)?W', 'modularidade': r'((S|s)emi(\s|-))?(M|m)odular',
+				'selo': r'80\s(P|p)lus(\s((B|b)ronze|(S|s)ilver|(G|g)old|((P|p)lati|(T|t)ita)num|(W|w)hite))?'}
 
 def initCat(brands):
 	catalog = dict()
@@ -215,24 +218,55 @@ def manageProd(products,plist):
 										integrada,
 										info_adicionais))
 
+			elif p_type == 'psu':
+				potencia = re.search(regexes['potencia'],nome)
+				if potencia:
+					potencia = potencia.group()
+				selo = re.search(regexes['selo'],nome)
+				if selo:
+					selo = selo.group()
+				modularidade = re.search(regexes['modularidade'],nome)
+				if modularidade:
+					modularidade = modularidade.group()
+
+				modelo = nome.split(' - ')[-1]
+				info_adicionais = nome.split(',')[0]
+				info_adicionais = info_adicionais.split(' ')
+				info_adicionais = [i for i in info_adicionais if i.lower() != marca]
+				removables = [potencia]			#mais comportados
+				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
+
+				p_list.append(Psu('kabum.com.br',#site,
+										nome,
+										preco,
+										desconto,
+										link,
+										modelo,
+										marca,
+										selo,
+										potencia,
+										modularidade,
+										info_adicionais))
+
 if __name__ == '__main__':
 	from random import randint
 
 	#catalogo = initCat(brands)
 	#print(brands)
-	for p_type in ['ram', 'cpu', 'mobo', 'gpu']:
+	for p_type in ['psu']:#['ram', 'cpu', 'mobo', 'gpu']:
 	#p_type = 'cpu'#'ram'
 		print('-'*50+'\n'+'-'*50)
 		print('p_type: {}'.format(p_type))
 		print('-'*50+'\n'+'-'*50)
 		pecas = main_bypasser(p_type)
-		#pprint(pecas)
+		#pprint(pecas); input()
 		prod_list = (p_type, list())
 		manageProd(pecas,prod_list)
 		m_val = int(len(prod_list[1])/10)
 		a = randint(1,m_val-1)
 		for prod in prod_list[1][(a-1)*10:a*10]:
-			#if prod.integrada:# == 'Unknown':
+		#for prod in prod_list[1]:
+			#if not prod.selo:# == 'Unknown':
 			prod.parametros()
 			#pprint(vars(prod))
 			print('-'*50)

@@ -28,7 +28,7 @@ regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)(H|h)z(\s?\([1-9]\.?[0-9]+
 				'integrada': [r'((I|i)ntel\s)?HD\s(G|g)raphics', r'[1-9][0-9]+G'],		#intel/amd
 				'potencia': r'[1-9]([0-9]+)?W', 'modularidade': r'((S|s)emi(\s|-))?(M|m)odular',
 				'selo': r'80\s(P|p)lus(\s((B|b)ronze|(S|s)ilver|(G|g)old|((P|p)lati|(T|t)ita)num|(W|w)hite))?',
-				'c_tam': r'(((M|m)i(d|ni)|(F|f)ull)(-|\s)?(T|t)ower|ATX|ITX)'}
+				'c_tam': r'(((M|m)i(d|ni|cro)|(F|f)ull)(-|\s)?(T|t)ower|(m|u)?ATX|ITX)'}
 
 def initCat(brands):
 	catalog = dict()
@@ -264,10 +264,20 @@ def manageProd(products,plist):
 				if tamanho:
 					tamanho = tamanho.group()
 
-				modelo = nome.split(' - ')[-1]
-#				if not tamanho:			#mock look-up table
-#					if re.match(r'NXLITE030',modelo)
-#						tamanho = 'ATX'
+				modelo = re.search(r'(BG-[0-9]+|GA[0-9]+|SGC[1-9]\s?Window)',nome)
+				if modelo:
+					modelo = modelo.group()
+				else:
+					modelo = nome.split(' - ')[-1]
+					if not re.search(r'lancool',modelo,flags=re.IGNORECASE) and  ' ' in slicer(modelo):
+						modelo = modelo.split(' ')[-1]
+				if not tamanho:			#mock look-up table
+					if re.match(r'(NXLITE0(2|3)0B?|BG-[0-9]+|32296|SGC1\s?Window|CG.+B0X|NXHUMMERTGF|RM-(CA|WT)-0(6|7)-(FB|RGB)|LANCOOL\s205\sBLACK)',modelo):
+						tamanho = 'ATX'
+					elif re.match(r'GA178|CC-9011116-WW|GX700',modelo):
+						tamanho = 'uATX'
+					elif re.match(r'CC-9011131-WW|NX(INFINTY(ALPHA|ATOM|OMEGA)|HUMMERTGM)',modelo):
+						tamanho = 'Mid Tower'
 				info_adicionais = nome.split(',')[0]
 				info_adicionais = info_adicionais.split(' ')
 				info_adicionais = [i for i in info_adicionais if i.lower() != marca]

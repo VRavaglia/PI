@@ -16,7 +16,8 @@ brands = ['cooler_master', 'evga', 'corsair', 'thermaltake', 'pcyes', 'gigabyte'
 			'c3_tech', 'brazil_pc', 'seasonic', 'cougar', 'bluecase', 'apex_gaming',
 			'sharkoon', 'powerx', 'nox', 't-dagger', 'fortrek', 'c3_plus', 'warrior',
 			'vinik', 'pixxo', 'k_mex', 'rise_mode', 'lacie', 'asustor', 'qnap', 'wd',
-			'synology', 'f3'] + pBrands
+			'synology', 'f3', 'oxy', 'geil', 'tarct', 'bitfenix', 'gamdias', 'nzxt',
+			'aorus', 'oex_game', 'xwise', 'maxxtro', 'hoopson', 'evus', 'tronos'] + pBrands
 
 mock_brands = ['lancool', 'odyssey_black']
 
@@ -28,7 +29,7 @@ regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)(H|h)z(\s?\([1-9]\.?[0-9]+
 				'quantidade': r'[1-9](x|X)[1-9]([0-9]+)?(GB)?',
 				'integrada': [r'((I|i)ntel\s)?HD\s(G|g)raphics', r'[1-9][0-9]+G'],		#intel/amd
 				'potencia': r'[1-9]([0-9]+)?W', 'modularidade': r'((S|s)emi(\s|-))?(M|m)odular',
-				'selo': r'80\s(P|p)lus(\s((B|b)ronze|(S|s)ilver|(G|g)old|((P|p)lati|(T|t)ita)num|(W|w)hite))?',
+				'selo': r'80\s?(P|p)lus(\s((B|b)ronze|(S|s)ilver|(G|g)old|((P|p)lati|(T|t)ita)num|(W|w)hite))?',
 				'c_tam': r'(((M|m)i(d|ni|cro)|(F|f)ull)(-|\s)?(T|t)ower|(m|u)?ATX|ITX)',
 				'dimensoes': r'[1-9]\.[0-9]((´+)|-C)?(?!\s?(G|M)Hz)'}
 
@@ -42,7 +43,7 @@ def manageProd(products,plist):
 	p_type, p_list = plist
 	for product in products:
 		nome = re.sub(r'\s+$', '', product['nome'])
-		if not re.search(r'^((K|k)it|(S|s)uporte|(C|c)abo)|(F|f)Ita|(C|c)ase\s((M|m)ultilaser\s)?p(\/|ara)\sHD|(G|g)aveta|(A|a)daptador', nome):#####conf
+		if not re.search(r'^((K|k)it|(S|s)uporte|(C|c)abo)|(F|f)Ita|(C|c)ase\s((M|m)ultilaser\s)?p(\/|ara)\sHD|(G|g)aveta|(A|a)daptador|(F|f)(ita|onte\s(E|e)stabilizada\s(C|c)haveada)', nome):#####conf
 			preco = product['preco']
 			desconto = product['preco_desconto']
 			link = product['link']
@@ -99,6 +100,8 @@ def manageProd(products,plist):
 					elif re.search(r'(^|\s)(geforce|(gtx?)(\s)?7[0-9]0)', nome, flags=re.IGNORECASE):#talvez refinar
 						fabricante = 'nvidia'
 				marca = exMarca(re.sub(r',',r' ',nome),[i for i in brands if i not in pBrands])
+				if marca == 'Unknown':
+					marca = fabricante
 				vram = re.search(regexes['vram'][0], nome)
 				if not vram:
 					vram = re.search(regexes['vram'][1], nome)
@@ -280,6 +283,11 @@ def manageProd(products,plist):
 						tamanho = 'uATX'
 					elif re.match(r'CC-9011131-WW|NX(INFINTY(ALPHA|ATOM|OMEGA)|HUMMERTGM)',modelo):
 						tamanho = 'Mid Tower'
+				if marca == 'Unknown':
+					if re.match(r'CG(01C1RH001CB0X|-0[1-9]B1)',modelo):
+						marca = 'k_mex'
+					elif re.match(r'Ca-H710(i|b)-(Br|W1)',modelo):
+						marca = 'nzxt'
 				info_adicionais = nome.split(',')[0]
 				info_adicionais = info_adicionais.split(' ')
 				info_adicionais = [i for i in info_adicionais if i.lower() != marca]
@@ -346,10 +354,11 @@ if __name__ == '__main__':
 
 	#catalogo = initCat(brands)
 	#print(brands)
-	for p_type in ['hd']:#['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd']:
+	for p_type in ['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd']:
 		print('-'*50+'\n'+'-'*50)
 		print('p_type: {}'.format(p_type))
 		print('-'*50+'\n'+'-'*50)
+		input('Continue?')
 		pecas = main_bypasser(p_type)
 		#pprint(pecas); input()
 		prod_list = (p_type, list())

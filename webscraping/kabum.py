@@ -8,6 +8,7 @@ kabum_cpu = kabum_base + 'hardware/processadores?'
 kabum_gpu = kabum_base + 'hardware/placa-de-video-vga?'
 kabum_case = kabum_base + 'perifericos/gabinetes?'
 kabum_cooler = kabum_base + 'hardware/coolers?'
+kabum_hd = kabum_base + 'hardware/disco-rigido-hd?'
 
 prod_skip = 30
 
@@ -20,7 +21,7 @@ import json
 DEBUG = True
 
 def listar_todos_por_tipo(tipo):
-    url_produto = {'mobo' : kabum_mobo, 'psu' : kabum_psu, 'ram' : kabum_ram, 'cpu' : kabum_cpu, 'gpu' : kabum_gpu, 'case' : kabum_case, 'cooler': kabum_cooler}
+    url_produto = {'mobo' : kabum_mobo, 'psu' : kabum_psu, 'ram' : kabum_ram, 'cpu' : kabum_cpu, 'gpu' : kabum_gpu, 'case' : kabum_case, 'cooler': kabum_cooler, 'hd': kabum_hd}
 
     
     continuar = True

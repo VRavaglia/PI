@@ -101,14 +101,27 @@ class Ram(Produto):
 		super().info_adicionais()
 
 class Hd(Produto):
-	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, dimensoes, ssd, nvme, sata):
-		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca)
+	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, capacidade, dimensoes, ssd, nvme, sata,info_adicionais):
+		super().__init__(site, nome, preco, preco_desconto, link, modelo, marca,info_adicionais)
+		self.capacidade = capacidade
 		self.dimensoes = dimensoes
 		self.ssd = ssd
 		self.nvme = nvme
 		self.sata = sata
 		self.tipo = 'Hd'
 
+	def parametros(self):
+		super().parametros()
+		print('Capacidade: {}'.format(self.capacidade))
+		print('Dimensões: {}'.format(self.dimensoes))
+		print('SSD: {}'.format(self.ssd))
+		print('NVME: {}'.format(self.nvme))
+		print('Sata: {}'.format(self.sata))
+		if self.info_ad:
+			self.info_adicionais()
+
+	def info_adicionais(self):
+		super().info_adicionais()
 
 class Gpu(Produto):
 	def __init__(self, site, nome, preco, preco_desconto, link, modelo, marca, fabricante, vram, info_adicionais):

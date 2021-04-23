@@ -21,10 +21,10 @@ brands = ['cooler_master', 'evga', 'corsair', 'thermaltake', 'pcyes', 'gigabyte'
 
 mock_brands = ['lancool', 'odyssey_black']
 
-regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)(H|h)z(\s?\([1-9]\.?[0-9]+G(H|h)z(\s(M|m)ax)?(\s((T|t)urbo|(B|b)oost))?\))?',
-				'ddr': r'DDR(-)?[1-9]([0-9]+)?(-[0-9]+)?', 'vram': [r'[1-9]([0-9]+)?GB', r'[1-9]([0-9]+)?G'],
+regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)?(H|h)(Z|z)(\s?\([1-9]\.?[0-9]+G(H|h)z(\s(M|m)ax)?(\s((T|t)urbo|(B|b)oost))?\))?',
+				'ddr': r'DDR(-)?[1-9]([0-9]+)?(-[0-9]+)?L?', 'vram': [r'[1-9]([0-9]+)?GB', r'[1-9]([0-9]+)?G'],
 				'latencia': r'C(L)?[1-9]([0-9]+)?', 'socket': r'((FC)?LGA\s?[1-9][0-9]+|AM(3|4)\+?|s?(W|T)RX?(4|8)|SP3|FM2\+?)', #r'((LGA|B)(\s)?[1-9][0-9]+|AM4|s?TRX?4|SP3)',
-				'capacidade': r'[1-9]([0-9]+)?(GB|TB)', 'chipset': r'(([A-Z])[1-9][0-9]+M|(B|Z)(4|5)(5|6|9)0|X570)',
+				'capacidade': r'[1-9]([0-9]+)?\s?(GB|TB)(\s?\([1-9]x[0-9]+GB\))?', 'chipset': r'(([A-Z])[1-9][0-9]+M|(B|Z)(4|5)(5|6|9)0|X570)',
 				'tamanho': r'((E|e)xtended|(m|M)(icro|ini)?|u)?(\s|-)?(A|S|D|I)TX',
 				'quantidade': r'[1-9](x|X)[1-9]([0-9]+)?(GB)?',
 				'integrada': [r'((I|i)ntel\s)?HD\s(G|g)raphics', r'[1-9][0-9]+G'],		#intel/amd
@@ -349,16 +349,33 @@ def manageProd(products,plist):
 										sata,
 										info_adicionais))
 
+def checker(prod_list):
+	p_type, p_list = prod_list
+	if p_type == 'ram':
+		for product in p_list:
+			if not product.ddr:
+				if re.match(r'AX4U320038G16A-DR10',product.modelo):
+					product.updater(ddr='DDR4')
+			if not product.latencia:
+				if re.match(r'AX4U3(2|6)00(38|716)G1(6|8)A-D?CBK20',product.modelo):
+					product.updater(latencia='CL 19-19-19')
+				elif re.search(r'Memória\sGeil\sPotenza\sEVO(\sSuper\sLuce)?',product.modelo):
+					product.updater(latencia='CL 16-18-18-36')
+				elif re.match(r'OXY16S11/4G',product.modelo):
+					product.updater(latencia='CL 9')
+				elif re.match(r'OXY16LS11/4G',product.modelo):
+					product.updater(latencia='CL 11')
+
 if __name__ == '__main__':
 	from random import randint
 
 	#catalogo = initCat(brands)
 	#print(brands)
-	for p_type in ['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd']:
+	for p_type in ['ram']:#['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd']:
 		print('-'*50+'\n'+'-'*50)
 		print('p_type: {}'.format(p_type))
 		print('-'*50+'\n'+'-'*50)
-		input('Continue?')
+		#input('Continue?')
 		pecas = main_bypasser(p_type)
 		#pprint(pecas); input()
 		prod_list = (p_type, list())
@@ -366,6 +383,7 @@ if __name__ == '__main__':
 		m_val = int(len(prod_list[1])/10)
 		a = randint(1,m_val-1)
 		#for prod in prod_list[1][(a-1)*10:a*10]:
+		checker(prod_list)
 		for prod in prod_list[1]:
 			if prod.marca == 'Unknown':
 				prod.parametros()

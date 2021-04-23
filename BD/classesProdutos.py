@@ -87,6 +87,18 @@ class Ram(Produto):
 		self.quantidade = quantidade
 		self.tipo = 'Ram'
 
+	def updater(self,capacidade=None,frequencia=None,ddr=None,latencia=None,quantidade=None):
+		if capacidade:
+			self.capacidade = capacidate
+		if frequencia:
+			self.frequencia = frequencia
+		if ddr:
+			self.ddr = ddr
+		if latencia:
+			self.latencia = latencia
+		if quantidade:
+			self.quantidade = quantidade
+
 	def parametros(self):
 		super().parametros()
 		print('Capacidade: {}'.format(self.capacidade))

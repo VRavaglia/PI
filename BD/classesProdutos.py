@@ -30,6 +30,16 @@ class Mobo(Produto):
 		self.ddr = ddr
 		self.tipo = 'Mobo'
 
+	def updater(self,chipset=None,socket=None,tamanho=None,ddr=None):
+		if chipset:
+			self.chipset = chipset
+		if socket:
+			self.socket = socket
+		if tamanho:
+			self.tamanho = tamanho
+		if ddr:
+			self.ddr = ddr
+
 	def parametros(self):
 		super().parametros()
 		print('Chipset: {}'.format(self.chipset))
@@ -65,6 +75,14 @@ class Cpu(Produto):
 		self.frequencia = frequencia
 		self.integrada = integrada
 		self.tipo = 'Cpu'
+
+	def updater(self,socket=None,frequencia=None,integrada=None):
+		if socket:
+			self.socket = socket
+		if frequencia:
+			self.frequencia = frequencia
+		if integrada:
+			self.integrada = integrada
 
 	def parametros(self):
 		super().parametros()

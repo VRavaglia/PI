@@ -24,8 +24,8 @@ mock_brands = ['lancool', 'odyssey_black']
 regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)?(H|h)(Z|z)(\s?\([1-9]\.?[0-9]+G(H|h)z(\s(M|m)ax)?(\s((T|t)urbo|(B|b)oost))?\))?',
 				'ddr': r'DDR(-)?[1-9]([0-9]+)?(-[0-9]+)?L?', 'vram': [r'[1-9]([0-9]+)?GB', r'[1-9]([0-9]+)?G'],
 				'latencia': r'C(L)?[1-9]([0-9]+)?', 'socket': r'((FC)?LGA\s?[1-9][0-9]+|AM(3|4)\+?|s?(W|T)RX?(4|8)|SP3|FM2\+?)', #r'((LGA|B)(\s)?[1-9][0-9]+|AM4|s?TRX?4|SP3)',
-				'capacidade': r'[1-9]([0-9]+)?\s?(GB|TB)(\s?\([1-9]x[0-9]+GB\))?', 'chipset': r'(([A-Z])[1-9][0-9]+M|(B|Z)(4|5)(5|6|9)0|X570)',
-				'tamanho': r'((E|e)xtended|(m|M)(icro|ini)?|u)?(\s|-)?(A|S|D|I)TX',
+				'capacidade': r'[1-9]([0-9]+)?\s?(GB|TB)(\s?\([1-9]x[0-9]+GB\))?', 'chipset': r'[A-Z][1-9][0-9]+\s?(M|I|N)|(B|Z)(4|5)(5|6|9)0|((T|W)R)?X(57|4|8)0|((I|i)nte)?\s?X299X?',
+				'tamanho': r'((E|e)(xtended)?|(m|M)(icro|ini)?|u|XL)?(\s|-)?(A|S|D|I)TX',
 				'quantidade': r'[1-9](x|X)[1-9]([0-9]+)?(GB)?',
 				'integrada': [r'((I|i)ntel\s)?HD\s(G|g)raphics', r'[1-9][0-9]+G'],		#intel/amd
 				'potencia': r'[1-9]([0-9]+)?W', 'modularidade': r'((S|s)emi(\s|-))?(M|m)odular',
@@ -136,12 +136,15 @@ def manageProd(products,plist):
 				chipset = re.search(regexes['chipset'], nome)
 				if chipset:
 					chipset = chipset.group()
-				if re.match(r'(amd|asrock|asus|gigabyte)',marca) and not socket:
-					if re.match(r'(A|B|X)(4|5)(2|5|7)0M?',chipset):
-						socket = 'AM4'
-				elif marca == 'msi':
-					if re.match(r'B365M',chipset):
-						socket = 'LGA 1151'
+				if not socket:
+					if re.match(r'(amd|asrock|asus|gigabyte)',marca):
+						if re.match(r'(A|B|X)(4|5)(2|5|7)0M?',chipset):
+							socket = 'AM4'
+						if marca == 'asus' and re.match(r'B460(I|M)',chipset):
+							socket = 'LGA 1200'
+					elif marca == 'msi':
+						if re.match(r'B365M',chipset):
+							socket = 'LGA 1151'
 				tamanho = re.search(regexes['tamanho'], nome)
 				if tamanho:
 					tamanho = tamanho.group()
@@ -154,7 +157,13 @@ def manageProd(products,plist):
 				if re.match(r'(asrock|msi|amd)',marca) and not ddr:
 					if re.match(r'(X570|B460|H410)M', chipset):
 						ddr = 'DDR4'
-				modelo = nome.split(' - ')[-1]
+				modelo = re.search(r'ROG\s(Maximus\sXII|Crosshair\sVIII)\s(Extreme|Formula|Apex|Hero|Impact)|MAG\sB[1-9][0-9]+M?\s(Bazooka|Tomahawk)',nome)#gambiarra
+				if modelo:
+					modelo = modelo.group()
+				if not modelo:
+					modelo = nome.split(' - ')[-1]
+					if ' ' in slicer(modelo):
+						modelo = nome.split(' ')[-1]
 				info_adicionais = nome.split(',')[0]
 				aux = normString(info_adicionais,marca)
 				if aux:
@@ -197,15 +206,6 @@ def manageProd(products,plist):
 				modelo = nome.split(' - ')[-1]
 				if ' ' in slicer(modelo):
 					modelo = nome.split(' ')[-1]
-				if not socket:
-					if marca == 'amd':
-						if re.match(r'100-100000(167|08(6|7))WOF', modelo):
-							socket = 'sWRX8'
-						if re.match(r'AD540KOKHJBOX',modelo):
-							socket = 'FM2'
-					elif marca == 'intel':
-						if re.match(r'BX80701G6400',modelo):
-							socket = 'FCLGA1200'
 				info_adicionais = nome.split(',')[0]
 				aux = normString(info_adicionais,marca)
 				if aux:
@@ -365,13 +365,39 @@ def checker(prod_list):
 					product.updater(latencia='CL 9')
 				elif re.match(r'OXY16LS11/4G',product.modelo):
 					product.updater(latencia='CL 11')
+	elif p_type == 'cpu':
+		for product in p_list:
+			if not product.socket:
+				if product.marca == 'amd':
+					if re.match(r'100-100000(167|08(6|7))WOF', product.modelo):
+						product.updater(socket='sWRX8')
+					if re.match(r'AD540KOKHJBOX', product.modelo):
+						product.updater(socket='FM2')
+				elif product.marca == 'intel':
+					if re.match(r'BX80701G6400', product.modelo):
+						product.updater(socket='FCLGA1200')
+	elif p_type == 'mobo':
+		for product in p_list:
+			if not product.chipset:
+				if re.match(r'ROG\sMaximus\sXII\s(Extreme|Formula|Apex|Hero)', product.modelo):
+					product.updater(chipset='Z490')
+				if re.match(r'ROG\sCrosshair\sVIII\sImpact', product.modelo):
+					product.updater(chipset='X570')
+			if not product.tamanho:
+				if re.match(r'90MB1590-M0AAY0', product.modelo):
+					product.updater(tamanho='Extended ATX')
+			if not product.ddr:
+				if re.match(r'90(MB1590-M0AAY0|-MXBDG0-A0UAYZ)|MAG.+(Bazooka|Tomahawk)', product.modelo):
+					product.updater(ddr='DDR4')
+				elif re.match(r'Placa-Mãe\sTUF\sGaming\sB450M-Plus', product.info_ad):
+					product.updater(ddr='DDR4')
 
 if __name__ == '__main__':
 	from random import randint
 
 	#catalogo = initCat(brands)
 	#print(brands)
-	for p_type in ['ram']:#['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd']:
+	for p_type in ['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd']:
 		print('-'*50+'\n'+'-'*50)
 		print('p_type: {}'.format(p_type))
 		print('-'*50+'\n'+'-'*50)
@@ -384,7 +410,8 @@ if __name__ == '__main__':
 		a = randint(1,m_val-1)
 		#for prod in prod_list[1][(a-1)*10:a*10]:
 		checker(prod_list)
+		#print('There are {} products'.format(len(prod_list[1])))
 		for prod in prod_list[1]:
-			if prod.marca == 'Unknown':
-				prod.parametros()
-				print('-'*50)
+			#if not prod.ddr:# == 'Unknown':
+			prod.parametros()
+			print('-'*50)

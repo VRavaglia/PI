@@ -17,6 +17,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from enum import Enum
 from pprint import pprint
+import os
 import json
 
 DEBUG = True
@@ -32,7 +33,7 @@ def listar_todos_por_tipo(tipo):
 
     while continuar:
         pagina = pagina + 1
-        arquivo_debug = "kb_" + tipo +'_' + str(pagina) +"_debug.html"
+        arquivo_debug = "../webscraping/" + "kb_" + tipo +'_' + str(pagina) +"_debug.html"
 
         if not DEBUG:
             

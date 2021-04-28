@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import re
-from main import main_bypasser
+from mainWebscraping import main_bypasser
 from classesProdutos import *
 from func import exMarca, normString, slicer
 from pprint import pprint
@@ -199,7 +199,7 @@ def manageProd(products,plist):
 				elif marca == 'amd':
 					integrada = re.search(regexes['integrada'][1], nome)
 				else:
-					integrada = None
+					integrada = False
 				if  integrada:
 					integrada = integrada.group()
 				############################################
@@ -234,9 +234,13 @@ def manageProd(products,plist):
 				selo = re.search(regexes['selo'],nome)
 				if selo:
 					selo = selo.group()
+				else:
+					selo = ""
 				modularidade = re.search(regexes['modularidade'],nome)
 				if modularidade:
 					modularidade = modularidade.group()
+				else:
+					modularidade = 0
 
 				modelo = nome.split(' - ')[-1]
 				info_adicionais = nome.split(',')[0]
@@ -391,6 +395,8 @@ def checker(prod_list):
 					product.updater(ddr='DDR4')
 				elif re.match(r'Placa-Mãe\sTUF\sGaming\sB450M-Plus', product.info_ad):
 					product.updater(ddr='DDR4')
+				# elif re.match(r'b450|b460|b550|a520',product.link.lower()):
+				# 	product.updater(ddr='DDR4')
 
 if __name__ == '__main__':
 	from random import randint

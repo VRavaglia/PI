@@ -11,6 +11,8 @@ from pprint import pprint
 database = 'main.sqlite'
 tipos = ['mobo', 'psu', 'ram', 'cpu', 'gpu', 'case', 'hd']
 
+DEBUG = True
+
 def getChaves(produto):
     chaves = [a for a in dir(produto) if (not a.startswith('__') and a != 'tipo' and a != 'info_adicionais'and a != 'parametros' and a != 'info_ad' and a != 'updater')]
     # print(chaves)
@@ -31,6 +33,8 @@ def class2val(produto):
 
         if type(valor) is int or type(valor) is float:
             valores = valores + ', ' + str(valor)
+        elif type(valor) is bool:
+             valores = valores + ','  + str(valor).upper()
         else:
             valores = valores + ', \'' + valor + '\''
     
@@ -61,13 +65,14 @@ def inserirProduto(produto):
     chaves = class2chave(produto)
     chaves = '(' + chaves + ', data)'
 
-    insercao = "INSERT INTO " + produto.tipo + " " + chaves +" VALUES " + valores
+    insercao = "INSERT INTO \'" + produto.tipo + "\' " + chaves +" VALUES " + valores
 
-    #print(insercao)
-
+    if DEBUG:
+        print(insercao)
     cur.execute(insercao)
-
     con.commit()
+
+        
     con.close()
 
 def inserirTodos():
@@ -85,7 +90,8 @@ def inserirTodos():
                 print("Erro na inserção")
                 print(produto.nome)
                 print(produto.__dict__)
-                input("Pressione uma tecla para continuar...")
+                if DEBUG:
+                    input("Pressione uma tecla para continuar...")
 
 def deletarTodos():
     con = sqlite3.connect(database)

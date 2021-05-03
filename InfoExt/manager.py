@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 import re
-from main import main_bypasser
+from mainWebscraping import main_bypasser
 from classesProdutos import *
 from func import exMarca, normString, slicer
 from pprint import pprint
@@ -199,6 +199,8 @@ def manageProd(products,plist):
 				if frequencia:
 					frequencia = frequencia.group()
 				###############prob????#######################
+				
+				integrada = False
 				if marca == 'intel':
 					integrada = re.search(regexes['integrada'][0], nome)
 					if integrada:
@@ -244,6 +246,8 @@ def manageProd(products,plist):
 				selo = re.search(regexes['selo'],nome)
 				if selo:
 					selo = selo.group()
+				else:
+					selo = ""
 				modularidade = re.search(regexes['modularidade'],nome)
 				if modularidade:
 					modularidade = 0.5 if re.search(r'(S|s)emi',modularidade.group()) else 1.
@@ -280,6 +284,8 @@ def manageProd(products,plist):
 				tamanho = re.search(regexes['c_tam'], nome)
 				if tamanho:
 					tamanho = tamanho.group()
+				else:
+					tamanho = ""
 
 				modelo = re.search(r'(BG-[0-9]+|GA[0-9]+|SGC[1-9]\s?Window)',nome)
 				if modelo:
@@ -323,15 +329,26 @@ def manageProd(products,plist):
 				dimensoes = re.search(regexes['dimensoes'],nome)
 				if dimensoes:
 					dimensoes = dimensoes.group()
+				
 				ssd = re.search(r'ssd',nome,flags=re.IGNORECASE)
 				if ssd:
-					ssd = ssd.group()
-				nvme = re.search(r'nvme',nome,flags=re.IGNORECASE)
-				if nvme:
-					nvme = nvme.group()
+					ssd = True
+				else:
+					ssd = False
+							
 				sata = re.search(r'sata',nome,flags=re.IGNORECASE)
 				if sata:
-					sata = sata.group()
+					sata = True
+				else:
+					sata = False
+
+				nvme = re.search(r'nvme',nome,flags=re.IGNORECASE)
+				if nvme:
+					nvme = True
+					sata = False
+					ssd = True
+				else:
+					nvme = False
 
 				#modelo = re.search(r'(BG-[0-9]+|GA[0-9]+|SGC[1-9]\s?Window)',nome)
 				modelo = None
@@ -403,6 +420,8 @@ def checker(prod_list):
 					product.updater(ddr='DDR4')
 				elif re.match(r'Placa-Mãe\sTUF\sGaming\sB450M-Plus', product.info_ad):
 					product.updater(ddr='DDR4')
+				# elif re.match(r'b450|b460|b550|a520',product.link.lower()):
+				# 	product.updater(ddr='DDR4')
 
 if __name__ == '__main__':
 	from random import randint

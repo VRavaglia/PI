@@ -81,7 +81,7 @@ def manageProd(products,plist):
 							ddr = 'DDR3'
 					latencia = re.search(regexes['latencia'], nome)
 					if latencia:
-						latencia = re.sub(r'(CL?)\s([1-9])','\1\3', latencia.group())
+						latencia = re.sub(r'(CL?\s?)([1-9]+)','\2', latencia.group())
 					modelo = nome.split(' - ')[-1]
 					info_adicionais = nome.split(',')[0]
 					aux = normString(info_adicionais,marca)

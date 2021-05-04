@@ -9,7 +9,8 @@ from mainWebscraping import listar_todos_por_tipo
 from pprint import pprint
 
 database = 'main.sqlite'
-tipos = ['mobo', 'psu', 'ram', 'cpu', 'gpu', 'case', 'hd']
+#tipos = ['hd', 'ssd']
+tipos = ['mobo', 'psu', 'ram', 'cpu', 'gpu', 'case', 'hd', 'ssd']
 
 DEBUG = True
 
@@ -28,8 +29,7 @@ def class2val(produto):
     for chave in chaves:
         valor = produto.__dict__[chave]
 
-     #   print(chave)
-      #  print(valor)
+        # print(chave, " : ", valor)
 
         if type(valor) is int or type(valor) is float:
             valores = valores + ', ' + str(valor)
@@ -76,30 +76,32 @@ def inserirProduto(produto):
     con.close()
 
 def inserirTodos():
-    loja = 'kabum'
-    for tipo in tipos:
-        produtos = listar_todos_por_tipo(loja, tipo)
-        produtos_classificados = list()
-        manageProd(produtos, (tipo, produtos_classificados))
-        checker((tipo, produtos_classificados))
+    lojas = ['pch', 'kabum']
+    for loja in lojas:
+        for tipo in tipos:
+            produtos = listar_todos_por_tipo(loja, tipo)
+            produtos_classificados = list()
+            manageProd(produtos, (tipo, produtos_classificados))
+            checker((tipo, produtos_classificados))
 
-        for produto in produtos_classificados:
-            try:
-                inserirProduto(produto)
-            except:
-                print("Erro na inserção")
-                print(produto.nome)
-                print(produto.__dict__)
-                if DEBUG:
-                    input("Pressione uma tecla para continuar...")
+            for produto in produtos_classificados:
+                try:
+                    inserirProduto(produto)
+                except:
+                    print("Erro na inserção")
+                    print(produto.nome)
+                    print(produto.__dict__)
+                    if DEBUG:
+                        input("Pressione uma tecla para continuar...")
 
 def deletarTodos():
     con = sqlite3.connect(database)
     cur = con.cursor()
 
     for tipo in tipos:
-        # print(tipo)
-        cur.execute("DELETE from \"" + tipo + "\"")
+        if tipo != "ssd":
+            # print(tipo)
+            cur.execute("DELETE from \"" + tipo + "\"")
 
     con.commit()
     con.close()

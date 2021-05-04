@@ -10,8 +10,10 @@ def listar_todos_por_tipo(loja, tipo_peca):
 	pecas = []
 	if loja == 'kabum': # trocar por um case quando a tb for adicionada
 		pecas = kb.listar_todos_por_tipo(tipo_peca)
-	if loja == 'pch': # trocar por um case quando a tb for adicionada
+	elif loja == 'pch': # trocar por um case quando a tb for adicionada
 		pecas = pch.pichau_listar_todos_por_tipo(tipo_peca)
+	else:
+		print("Loja errada!: ", loja)
 	return pecas
 
 def main_bypasser(option):

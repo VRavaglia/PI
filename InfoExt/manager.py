@@ -27,7 +27,8 @@ mock_brands = ['lancool', 'odyssey_black', 'gamer_pichau', 'pichau_basic', 'pcye
 regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)?(H|h)(Z|z)(\s?\([1-9]\.?[0-9]+G(H|h)z(\s(M|m)ax)?(\s((T|t)urbo|(B|b)oost))?\))?',
 				'ddr': r'DDR(-)?[1-9]([0-9]+)?(-[0-9]+)?L?', 'vram': [r'[1-9]([0-9]+)?GB', r'[1-9]([0-9]+)?G'],
 				'latencia': r'CL?\s?[1-9]([0-9]+)?', 'socket': r'((FC)?LGA\s?[1-9][0-9]+|AM(3|4)\+?|s?(W|T)RX?(4|8)|SP3|FM2\+?)', #r'((LGA|B)(\s)?[1-9][0-9]+|AM4|s?TRX?4|SP3)',
-				'capacidade': r'[1-9]([0-9]+)?\s?(GB|TB)(\s?\([1-9]x[0-9]+GB\))?', 'chipset': r'[A-Z][1-9][0-9]+\s?(M|I|N)|(B|Z)(4|5)(5|6|9)0|((T|W)R)?X(57|4|8)0|((I|i)nte)?\s?X299X?',
+				'capacidade': r'[1-9]([0-9]+)?\s?((G|g|T|t)(B|b))(\s?\([1-9]x[0-9]+GB\))?', 
+				'chipset': r'[A-Z][1-9][0-9]+\s?(M|I|N)|(B|Z)(4|5)(5|6|9)0|((T|W)R)?X(57|4|8)0|((I|i)nte)?\s?X299X?|(H|h)(8|6|4)(1|7)0?',
 				'tamanho': r'((E|e)(xtended)?|(m|M)(icro|ini)?|u|XL)?(\s|-)?(A|S|D|I)TX',
 				'quantidade': r'[1-9](x|X)[1-9]([0-9]+)?(GB)?',
 				'integrada': [r'((I|i)ntel\s)?HD\s(G|g)raphics|i(3|5|7)-[1-9]([0-9]+)?(F|f|K|k)?', r'[1-9][0-9]+G'],		#intel/amd
@@ -53,53 +54,59 @@ def manageProd(products,plist):
 			link = product['link']
 			marca = exMarca(re.sub(r',',r' ',nome),brands)
 			if p_type == 'ram':
-				capacidade = re.search(regexes['capacidade'], nome)
-				if capacidade:
-					capacidade = capacidade.group()
-					quantidade = re.search(regexes['quantidade'], capacidade)
-					mult = 1000 if re.search('TB',capacidade) else 1
-					capacidade = int(re.search(r'[1-9]([0-9]+)?', capacidade).group())*mult
-				if not quantidade:
-					quantidade = re.search(regexes['quantidade'], nome)
-				if quantidade:
-					quantidade = re.search(r'[1-9]([0-9]+)?(x|X)', quantidade.group())
-					quantidade = int(quantidade.group()[:-1])
-				else:
-					quantidade = 1
-				frequencia = re.search(regexes['frequencia'], nome)
-				if frequencia:
-					frequencia = frequencia.group()
-				ddr = re.search(regexes['ddr'], nome)
-				if ddr:
-					ddr = ddr.group()
-				latencia = re.search(regexes['latencia'], nome)
-				if latencia:
-					latencia = re.sub(r'(CL?)\s([1-9])','\1\3', latencia.group())
-				modelo = nome.split(' - ')[-1]
-				info_adicionais = nome.split(',')[0]
-				aux = normString(info_adicionais,marca)
-				if aux:
-					info_adicionais = aux
-				if frequencia:
-					info_adicionais = re.sub(frequencia, '', info_adicionais)
-				info_adicionais = info_adicionais.split(' ')
-				info_adicionais = [i for i in info_adicionais if i.lower() != marca]
-				removables = [ddr, latencia, capacidade, modelo]			#mais comportados
-				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
+				if not re.search(r'(M|m)\.2', nome):
+					capacidade = re.search(regexes['capacidade'], nome)
+					if capacidade:
+						capacidade = capacidade.group()
+						quantidade = re.search(regexes['quantidade'], capacidade)
+						mult = 1000 if re.search('TB',capacidade) else 1
+						capacidade = int(re.search(r'[1-9]([0-9]+)?', capacidade).group())*mult
+					if not quantidade:
+						quantidade = re.search(regexes['quantidade'], nome)
+					if quantidade:
+						quantidade = re.search(r'[1-9]([0-9]+)?(x|X)', quantidade.group())
+						quantidade = int(quantidade.group()[:-1])
+					else:
+						quantidade = 1
+					frequencia = re.search(regexes['frequencia'], nome)
+					if frequencia:
+						frequencia = frequencia.group()
+					ddr = re.search(regexes['ddr'], nome)
+					if ddr:
+						ddr = ddr.group()
+					else:
+						if int(frequencia[:-3]) > 2132:
+							ddr = 'DDR4'
+						else:
+							ddr = 'DDR3'
+					latencia = re.search(regexes['latencia'], nome)
+					if latencia:
+						latencia = re.sub(r'(CL?)\s([1-9])','\1\3', latencia.group())
+					modelo = nome.split(' - ')[-1]
+					info_adicionais = nome.split(',')[0]
+					aux = normString(info_adicionais,marca)
+					if aux:
+						info_adicionais = aux
+					if frequencia:
+						info_adicionais = re.sub(frequencia, '', info_adicionais)
+					info_adicionais = info_adicionais.split(' ')
+					info_adicionais = [i for i in info_adicionais if i.lower() != marca]
+					removables = [ddr, latencia, capacidade, modelo]			#mais comportados
+					info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
-				p_list.append(Ram(site,
-										nome,
-										preco,
-										desconto,
-										link,
-										modelo,
-										marca,
-										capacidade,
-										frequencia,
-										ddr,
-										latencia,
-										quantidade,
-										info_adicionais))
+					p_list.append(Ram(site,
+											nome,
+											preco,
+											desconto,
+											link,
+											modelo,
+											marca,
+											capacidade,
+											frequencia,
+											ddr,
+											latencia,
+											quantidade,
+											info_adicionais))
 
 			elif p_type == 'gpu':
 				fabricante = exMarca(re.sub(r',',r' ',nome), pBrands)
@@ -154,15 +161,24 @@ def manageProd(products,plist):
 					elif marca == 'msi':
 						if re.match(r'B365M',chipset):
 							socket = 'LGA 1151'
+				if not socket:
+					if re.search(r'1200',nome):
+						socket = "LGA 1200"
+					elif re.search(r'J4005I',nome):
+						socket = "FCBGA1090"
 				tamanho = re.search(regexes['tamanho'], nome)
 				if tamanho:
 					tamanho = 'mATX' if re.search(r'((M|m)(icro\s?)?|u)ATX',tamanho.group()) else re.sub('^\s','',tamanho.group())
 				if not tamanho and chipset:
 					if chipset[-1].lower() == 'm':
 						tamanho = 'mATX'#'uATX'
+					else:
+						tamanho = 'ATX'
 				ddr = re.search(regexes['ddr'], nome)
 				if ddr:
 					ddr = ddr.group()
+				elif re.match(r'AM4|LGA\s?1200', str(socket)):
+					ddr = "DDR4"
 				if re.match(r'(asrock|msi|amd)',marca) and not ddr:
 					if re.match(r'(X570|B460|H410)M', chipset):
 						ddr = 'DDR4'
@@ -199,6 +215,14 @@ def manageProd(products,plist):
 				socket = re.search(regexes['socket'], nome)
 				if socket:
 					socket = socket.group()
+				elif re.search(r'1[0-1][1-9]00', nome):
+					socket = "FCLGA1200"
+				elif re.search(r'9[1-9]00', nome):
+					socket = "FCLGA1151"
+				elif re.search(r'39[5-9]0(x|X)', nome):
+					socket = "sTRX4"
+				elif re.search(r'(3|2)(2|4)00', nome):
+					socket = "AM4"
 				frequencia = re.search(regexes['frequencia'], nome)
 				if frequencia:
 					frequencia = frequencia.group()
@@ -210,6 +234,8 @@ def manageProd(products,plist):
 					if integrada:
 						if re.search(r'[0-9](F|f|K|k)',integrada.group()):
 							integrada = False
+						else:
+							integrada = True
 				elif marca == 'amd':
 					integrada = re.search(regexes['integrada'][1], nome)
 				else:
@@ -247,6 +273,12 @@ def manageProd(products,plist):
 				potencia = re.search(regexes['potencia'],nome)
 				if potencia:
 					potencia = potencia.group()
+				else:
+					potencia = re.search(r'[1-9]([0-9]+)?', nome)
+					if potencia:
+						potencia = potencia.group()
+					
+
 				selo = re.search(regexes['selo'],nome)
 				if selo:
 					selo = selo.group()
@@ -331,7 +363,7 @@ def manageProd(products,plist):
 										info_adicionais))
 
 			elif p_type == 'hd' or p_type == 'ssd':
-				if not re.search('(E|e)xterno',nome):
+				if not re.search('(E|e)xterno|(^|\s)(C|c)ase\s|(D|d)ock|(D|d|N|n)(a|A)(s|S)',nome):					
 					capacidade = re.search(regexes['capacidade'],nome)
 					if capacidade:
 						capacidade = capacidade.group()
@@ -340,6 +372,9 @@ def manageProd(products,plist):
 					dimensoes = re.search(regexes['dimensoes'],nome)
 					if dimensoes:
 						dimensoes = re.sub('´', '', dimensoes.group())
+					else:
+						dimensoes = 0	
+					dimensoes = float(dimensoes)
 					ssd = re.search(r'ssd',nome,flags=re.IGNORECASE)
 					ssd = True if ssd else False
 #					if ssd:
@@ -406,6 +441,10 @@ def checker(prod_list):
 					product.updater(latencia='CL9')
 				elif re.match(r'OXY16LS11/4G',product.modelo):
 					product.updater(latencia='CL11')
+				else:
+					product.updater(latencia='NCL')
+
+
 	elif p_type == 'cpu':
 		for product in p_list:
 			if not product.socket:

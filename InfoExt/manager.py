@@ -17,7 +17,8 @@ brands = ['cooler_master', 'evga', 'corsair', 'thermaltake', 'pcyes', 'gigabyte'
 			'sharkoon', 'powerx', 'nox', 't-dagger', 'fortrek', 'c3_plus', 'warrior',
 			'vinik', 'pixxo', 'k_mex', 'rise_mode', 'lacie', 'asustor', 'qnap', 'wd',
 			'synology', 'f3', 'oxy', 'geil', 'tarct', 'bitfenix', 'gamdias', 'nzxt',
-			'aorus', 'oex_game', 'xwise', 'maxxtro', 'hoopson', 'evus', 'tronos'] + pBrands
+			'aorus', 'oex_game', 'xwise', 'maxxtro', 'hoopson', 'evus', 'tronos',
+			'addlink', 'silicon_power', 'samsung', 'ktrok', 'kazuk', 'mitsushiba'] + pBrands
 
 mock_brands = ['lancool', 'odyssey_black']
 
@@ -31,7 +32,7 @@ regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)?(H|h)(Z|z)(\s?\([1-9]\.?[
 				'potencia': r'[1-9]([0-9]+)?W', 'modularidade': r'((S|s)emi(\s|-))?(M|m)odular',
 				'selo': r'80\s?(P|p)lus(\s((B|b)ronze|(S|s)ilver|(G|g)old|((P|p)lati|(T|t)ita)num|(W|w)hite))?',
 				'c_tam': r'(((M|m)i(d|ni|cro)|(F|f)ull)(-|\s)?(T|t)ower|(m|u)?ATX|ITX)',
-				'dimensoes': r'[1-9]\.[0-9]((´+)|-C)?(?!\s?(G|M)Hz)'}
+				'dimensoes': r'[1-9]\.[0-9]((´+)|-C)?(?!\s?(G|M)Hz|MB/s)'}
 
 def initCat(brands):
 	catalog = dict()
@@ -43,6 +44,7 @@ def manageProd(products,plist):
 	p_type, p_list = plist
 	for product in products:
 		nome = re.sub(r'\s+$', '', product['nome'])
+		site = product['site']
 		if not re.search(r'^((K|k)it|(S|s)uporte|(C|c)abo)|(F|f)Ita|(C|c)ase\s((M|m)ultilaser\s)?p(\/|ara)\sHD|(G|g)aveta|(A|a)daptador|(F|f)(ita|onte\s(E|e)stabilizada\s(C|c)haveada)', nome):#####conf
 			preco = product['preco']
 			desconto = product['preco_desconto']
@@ -83,7 +85,7 @@ def manageProd(products,plist):
 				removables = [ddr, latencia, capacidade, modelo]			#mais comportados
 				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
-				p_list.append(Ram('kabum.com.br',#site,
+				p_list.append(Ram(site,
 										nome,
 										preco,
 										desconto,
@@ -123,7 +125,7 @@ def manageProd(products,plist):
 				removables = [vram]			#mais comportados
 				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
-				p_list.append(Gpu('kabum.com.br',#site,
+				p_list.append(Gpu(site,
 										nome,
 										preco,
 										desconto,
@@ -178,7 +180,7 @@ def manageProd(products,plist):
 				removables = [ddr, tamanho, chipset, modelo]			#mais comportados
 				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
-				p_list.append(Mobo('kabum.com.br',#site,
+				p_list.append(Mobo(site,
 										nome,
 										preco,
 										desconto,
@@ -227,7 +229,7 @@ def manageProd(products,plist):
 				removables = [frequencia, integrada, socket, modelo]			#mais comportados
 				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
-				p_list.append(Cpu('kabum.com.br',#site,
+				p_list.append(Cpu(site,
 										nome,
 										preco,
 										desconto,
@@ -261,7 +263,7 @@ def manageProd(products,plist):
 				removables = [potencia]			#mais comportados
 				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
-				p_list.append(Psu('kabum.com.br',#site,
+				p_list.append(Psu(site,
 										nome,
 										preco,
 										desconto,
@@ -312,7 +314,7 @@ def manageProd(products,plist):
 				removables = [tamanho]			#mais comportados
 				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
-				p_list.append(Case('kabum.com.br',#site,
+				p_list.append(Case(site,
 										nome,
 										preco,
 										desconto,
@@ -322,61 +324,65 @@ def manageProd(products,plist):
 										tamanho,
 										info_adicionais))
 
-			elif p_type == 'hd':
-				capacidade = re.search(regexes['capacidade'],nome)
-				if capacidade:
-					capacidade = capacidade.group()
-				dimensoes = re.search(regexes['dimensoes'],nome)
-				if dimensoes:
-					dimensoes = dimensoes.group()
-				
-				ssd = re.search(r'ssd',nome,flags=re.IGNORECASE)
-				if ssd:
-					ssd = True
-				else:
-					ssd = False
-							
-				sata = re.search(r'sata',nome,flags=re.IGNORECASE)
-				if sata:
-					sata = True
-				else:
-					sata = False
+			elif p_type == 'hd' or p_type == 'ssd':
+				if not re.search('(E|e)xterno',nome):
+					capacidade = re.search(regexes['capacidade'],nome)
+					if capacidade:
+						capacidade = capacidade.group()
+						mult = 1000 if re.search('TB',capacidade) else 1
+						capacidade = int(re.search(r'[1-9]([0-9]+)?', capacidade).group())*mult
+					dimensoes = re.search(regexes['dimensoes'],nome)
+					if dimensoes:
+						dimensoes = re.sub('´', '', dimensoes.group())
+					ssd = re.search(r'ssd',nome,flags=re.IGNORECASE)
+					ssd = True if ssd else False
+#					if ssd:
+#						ssd = True
+#					else:
+#						ssd = False
+#								
+					sata = re.search(r'sata',nome,flags=re.IGNORECASE)
+					sata = True if sata else False
+#					if sata:
+#						sata = True
+#					else:
+#						sata = False
 
-				nvme = re.search(r'nvme',nome,flags=re.IGNORECASE)
-				if nvme:
-					nvme = True
-					sata = False
-					ssd = True
-				else:
-					nvme = False
+					nvme = re.search(r'nvme',nome,flags=re.IGNORECASE)
+					if nvme:
+						nvme = True
+						sata = False
+						ssd = True
+					else:
+						nvme = False
 
-				#modelo = re.search(r'(BG-[0-9]+|GA[0-9]+|SGC[1-9]\s?Window)',nome)
-				modelo = None
-				if modelo:
-					modelo = modelo.group()
-				else:
-					modelo = nome.split(' - ')[-1]
-					if not re.search(r'lancool',modelo,flags=re.IGNORECASE) and  ' ' in slicer(modelo):
-						modelo = modelo.split(' ')[-1]
-				info_adicionais = nome.split(',')[0]
-				info_adicionais = info_adicionais.split(' ')
-				info_adicionais = [i for i in info_adicionais if i.lower() != marca]
-				removables = [capacidade,ssd,nvme,sata]			#mais comportados
-				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
+					#modelo = re.search(r'(BG-[0-9]+|GA[0-9]+|SGC[1-9]\s?Window)',nome)
+					modelo = None
+					if modelo:
+						modelo = modelo.group()
+					else:
+						modelo = nome.split(' - ')[-1]
+						if not re.search(r'lancool',modelo,flags=re.IGNORECASE) and  ' ' in slicer(modelo):
+							modelo = modelo.split(' ')[-1]
+					info_adicionais = nome.split(',')[0]
+					info_adicionais = info_adicionais.split(' ')
+					info_adicionais = [i for i in info_adicionais if i.lower() != marca]
+					removables = [capacidade,ssd,nvme,sata]			#mais comportados
+					info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
-				p_list.append(Hd('kabum.com.br',#site,
-										nome,
-										preco,
-										desconto,
-										link,
-										modelo,
-										marca,
-										capacidade,
-										dimensoes,
-										ssd,
-										nvme,
-										sata,
-										info_adicionais))
+					p_list.append(Hd(site,
+											nome,
+											preco,
+											desconto,
+											link,
+											modelo,
+											marca,
+											capacidade,
+											dimensoes,
+											ssd,
+											nvme,
+											sata,
+											info_adicionais))
 
 def checker(prod_list):
 	p_type, p_list = prod_list
@@ -428,7 +434,7 @@ if __name__ == '__main__':
 
 	#catalogo = initCat(brands)
 	#print(brands)
-	for p_type in ['cpu']:#['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd']:
+	for p_type in ['hd', 'ssd']:#['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd', 'ssd']:
 		print('-'*50+'\n'+'-'*50)
 		print('p_type: {}'.format(p_type))
 		print('-'*50+'\n'+'-'*50)
@@ -443,6 +449,6 @@ if __name__ == '__main__':
 		checker(prod_list)
 		#print('There are {} products'.format(len(prod_list[1])))
 		for prod in prod_list[1]:
-			#if not prod.ddr:# == 'Unknown':
+			#if prod.marca == 'Unknown':
 			prod.parametros()
 			print('-'*50)

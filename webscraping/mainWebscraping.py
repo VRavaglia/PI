@@ -1,6 +1,7 @@
 
 from enum import Enum
 import kabum as kb
+import pichau as pch
 import sys
 from pprint import pprint
 
@@ -9,10 +10,12 @@ def listar_todos_por_tipo(loja, tipo_peca):
 	pecas = []
 	if loja == 'kabum': # trocar por um case quando a tb for adicionada
 		pecas = kb.listar_todos_por_tipo(tipo_peca)
+	if loja == 'pch': # trocar por um case quando a tb for adicionada
+		pecas = pch.pichau_listar_todos_por_tipo(tipo_peca)
 	return pecas
 
 def main_bypasser(option):
-	return listar_todos_por_tipo('kabum',option)
+	return listar_todos_por_tipo('pch',option)
 
 def main():
 	print(sys.argv[1])

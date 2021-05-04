@@ -18,9 +18,11 @@ brands = ['cooler_master', 'evga', 'corsair', 'thermaltake', 'pcyes', 'gigabyte'
 			'vinik', 'pixxo', 'k_mex', 'rise_mode', 'lacie', 'asustor', 'qnap', 'wd',
 			'synology', 'f3', 'oxy', 'geil', 'tarct', 'bitfenix', 'gamdias', 'nzxt',
 			'aorus', 'oex_game', 'xwise', 'maxxtro', 'hoopson', 'evus', 'tronos',
-			'addlink', 'silicon_power', 'samsung', 'ktrok', 'kazuk', 'mitsushiba'] + pBrands
+			'addlink', 'silicon_power', 'samsung', 'ktrok', 'kazuk', 'mitsushiba',
+			'team_group', 'duex', 'pichau_gaming', 'super_flower', 'azza', 'mancer',
+			'tgt', 'aigo', 'dt3_sports', 'pcyes'] + pBrands
 
-mock_brands = ['lancool', 'odyssey_black']
+mock_brands = ['lancool', 'odyssey_black', 'gamer_pichau', 'pichau_basic', 'pcyes!']
 
 regexes = {'frequencia': r'[1-9]((\.)?[0-9]+)?\s?(M|G)?(H|h)(Z|z)(\s?\([1-9]\.?[0-9]+G(H|h)z(\s(M|m)ax)?(\s((T|t)urbo|(B|b)oost))?\))?',
 				'ddr': r'DDR(-)?[1-9]([0-9]+)?(-[0-9]+)?L?', 'vram': [r'[1-9]([0-9]+)?GB', r'[1-9]([0-9]+)?G'],
@@ -283,6 +285,10 @@ def manageProd(products,plist):
 						marca = 'lian_li'
 					elif marca == 'odyssey_black':
 						marca = 'k_mex'
+					elif marca == 'gamer_pichau' or marca == 'pichau_basic':
+						marca = 'pichau_gaming'
+					elif marca == 'pcyes!':
+						marca = 'pcyes'
 				tamanho = re.search(regexes['c_tam'], nome)
 				if tamanho:
 					tamanho = tamanho.group()
@@ -434,7 +440,7 @@ if __name__ == '__main__':
 
 	#catalogo = initCat(brands)
 	#print(brands)
-	for p_type in ['hd', 'ssd']:#['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd', 'ssd']:
+	for p_type in ['ram', 'cpu', 'mobo', 'gpu', 'case', 'psu', 'hd', 'ssd']:
 		print('-'*50+'\n'+'-'*50)
 		print('p_type: {}'.format(p_type))
 		print('-'*50+'\n'+'-'*50)
@@ -444,11 +450,11 @@ if __name__ == '__main__':
 		prod_list = (p_type, list())
 		manageProd(pecas,prod_list)
 		m_val = int(len(prod_list[1])/10)
-		a = randint(1,m_val-1)
+		#a = randint(1,m_val-1)
 		#for prod in prod_list[1][(a-1)*10:a*10]:
 		checker(prod_list)
 		#print('There are {} products'.format(len(prod_list[1])))
 		for prod in prod_list[1]:
-			#if prod.marca == 'Unknown':
-			prod.parametros()
-			print('-'*50)
+			if prod.marca == 'Unknown':
+				prod.parametros()
+				print('-'*50)

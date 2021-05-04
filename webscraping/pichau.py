@@ -41,12 +41,12 @@ def pichau_listar_todos_por_tipo(tipo):
             html = urlopen(r).read()    
             soup = BeautifulSoup(html, 'html.parser')
         
-            f = open(arquivo_debug, 'w', encoding="utf8")
+            f = open(arquivo_debug, 'w', encoding='latin-1')#"utf8")
             f.write(soup.prettify())
             f.close()
             
         else:
-            f = open(arquivo_debug, 'r', encoding="utf8")
+            f = open(arquivo_debug, 'r', encoding='latin-1')#"utf8")
             html = f.read()
             f.close()
             soup = BeautifulSoup(html, 'html.parser')
@@ -61,7 +61,7 @@ def pichau_listar_todos_por_tipo(tipo):
         for dados in soup.find_all('a', 'product-item-link'):
             link = dados.get('href')
             nome = dados.string.strip()
-            dictDados = {'nome' : nome, 'link' : link}
+            dictDados = {'nome' : nome, 'link' : link, 'site': 'pichau.com.br'}
             auxDadosPagina.append(dictDados)
             quantidade_pg += 1
         

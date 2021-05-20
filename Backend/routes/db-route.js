@@ -3,7 +3,7 @@ const router = express.Router();
 const dbService = require('../services/db-service')
 
 router.get('/', async (req, res) => {
-    const listOfProds = await dbService.listProd(req.query.tipo, req.query.compat);
+    const listOfProds = await dbService.listProd(req.query.tipo, req.query.filtros);
     res.status(200).send(listOfProds);
 })
 

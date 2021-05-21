@@ -24,60 +24,95 @@ async function listProd(tipo, filtros) {
 
     var max_preco = min_preco = 0;
 
+    console.log("Filtros utilizados:")
+
     const rows = await knex.from(tipo).select("*").where(
         function(){
             if (filtrosJSON.max_preco > 0){
                 this.whereBetween('preco_desconto', [min_preco, max_preco])
+                console.log("preco")
             }
             if (typeof filtrosJSON.marca !== 'undefined') {
                 this.where('marca', filtrosJSON.marca)
+                console.log("marca")
             }
             if (typeof filtrosJSON.chipset !== 'undefined'){
                 this.where('socket', filtrosJSON.chipset)
+                console.log("chipset")
             }
             if (typeof filtrosJSON.socket !== 'undefined'){
                 this.where('socket', filtrosJSON.socket)
+                console.log("socket")
             }
             if (typeof filtrosJSON.tamanho !== 'undefined'){
-                this.where('socket', filtrosJSON.tamanho)
+                this.where('tamanho', filtrosJSON.tamanho)
+                console.log("tamanho")
             }
             if (typeof filtrosJSON.ddr !== 'undefined'){
-                this.where('socket', filtrosJSON.ddr)
+                this.where('ddr', filtrosJSON.ddr)
+                console.log("ddr")
             }
             if (filtrosJSON.max_capacidade > 0){
-                this.whereBetween('capacidade', [min_capacidade, max_capacidade])
+                this.whereBetween('capacidade', [filtrosJSON.min_capacidade, filtrosJSON.max_capacidade])
+                console.log("capacidade - min/max")
+            }
+            if (typeof filtrosJSON.capacidade !== 'undefined'){
+                this.where('capacidade', filtrosJSON.capacidade)
+                console.log("capacidade")
+            }
+            if (filtrosJSON.max_quantidade > 0){
+                this.whereBetween('quantidade', [filtrosJSON.min_quantidade, filtrosJSON.max_quantidade])
+                console.log("quantidade - min/max")
+            }
+            if (typeof filtrosJSON.quantidade !== 'undefined'){
+                this.where('quantidade', filtrosJSON.quantidade)
+                console.log("quantidade")
             }
             if (filtrosJSON.max_frequencia > 0){
-                this.whereBetween('frequencia', [min_frequencia, max_frequencia])
+                this.whereBetween('frequencia', [filtrosJSON.min_frequencia, filtrosJSON.max_frequencia])
+                console.log("frequencia")
+            }
+            if (typeof filtrosJSON.frequencia !== 'undefined'){
+                this.where('frequencia', filtrosJSON.frequencia)
+                console.log("frequencia")
             }
             if (typeof filtrosJSON.cl !== 'undefined'){
                 this.where('socket', filtrosJSON.cl)
+                console.log("cl")
             }
             if (filtrosJSON.max_vram > 0){
-                this.whereBetween('vram', [min_vram, max_vram])
+                this.whereBetween('vram', [filtrosJSON.min_vram, filtrosJSON.max_vram])
+                console.log("vram")
+            }
+            if (typeof filtrosJSON.vram !== 'undefined'){
+                this.where('vram', filtrosJSON.vram)
+                console.log("vram")
             }
             if (typeof filtrosJSON.fabricante !== 'undefined'){
                 this.where('socket', filtrosJSON.fabricante)
+                console.log("socket")
             }
             if (typeof filtrosJSON.ssdhd !== 'undefined'){
-                this.where('socket', filtrosJSON.ssdhd)
-            }
-            if (typeof filtrosJSON.potencia !== 'undefined'){
-                this.where('socket', filtrosJSON.potencia)
+                this.where('ssdhd', filtrosJSON.ssdhd)
+                console.log("ssdhd")
             }
             if (filtrosJSON.max_potencia > 0){
-                this.whereBetween('potencia', [min_potencia, max_potencia])
+                this.whereBetween('potencia', [filtrosJSON.min_potencia, filtrosJSON.max_potencia])
+                console.log("potencia")
+            }
+            if (typeof filtrosJSON.potencia !== 'undefined'){
+                this.where('potencia', filtrosJSON.potencia)
+                console.log("potencia")
             }
             if (typeof filtrosJSON.selo !== 'undefined'){
-                this.where('socket', filtrosJSON.selo)
+                this.where('selo', filtrosJSON.selo)
+                console.log("selo")
             }
         }
     ).catch((err) => { console.log( err); throw err })
 
     for (row of rows) {
-
-         console.log(row)
-
+        //  console.log(row)
     }
 
     

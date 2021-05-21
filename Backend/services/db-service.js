@@ -44,6 +44,33 @@ async function listProd(tipo, filtros) {
             if (typeof filtrosJSON.ddr !== 'undefined'){
                 this.where('socket', filtrosJSON.ddr)
             }
+            if (filtrosJSON.max_capacidade > 0){
+                this.whereBetween('capacidade', [min_capacidade, max_capacidade])
+            }
+            if (filtrosJSON.max_frequencia > 0){
+                this.whereBetween('frequencia', [min_frequencia, max_frequencia])
+            }
+            if (typeof filtrosJSON.cl !== 'undefined'){
+                this.where('socket', filtrosJSON.cl)
+            }
+            if (filtrosJSON.max_vram > 0){
+                this.whereBetween('vram', [min_vram, max_vram])
+            }
+            if (typeof filtrosJSON.fabricante !== 'undefined'){
+                this.where('socket', filtrosJSON.fabricante)
+            }
+            if (typeof filtrosJSON.ssdhd !== 'undefined'){
+                this.where('socket', filtrosJSON.ssdhd)
+            }
+            if (typeof filtrosJSON.potencia !== 'undefined'){
+                this.where('socket', filtrosJSON.potencia)
+            }
+            if (filtrosJSON.max_potencia > 0){
+                this.whereBetween('potencia', [min_potencia, max_potencia])
+            }
+            if (typeof filtrosJSON.selo !== 'undefined'){
+                this.where('socket', filtrosJSON.selo)
+            }
         }
     ).catch((err) => { console.log( err); throw err })
 

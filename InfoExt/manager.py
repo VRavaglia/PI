@@ -71,27 +71,31 @@ def manageProd(products,plist):
 					frequencia = re.search(regexes['frequencia'], nome)
 					if frequencia:
 						frequencia = frequencia.group()
+						mult = 1000 if re.search('GHz',frequencia,flags=re.IGNORECASE) else 1
+						frequencia = int(re.search(r'[1-9]([0-9]+)?', frequencia).group())*mult
 					ddr = re.search(regexes['ddr'], nome)
 					if ddr:
 						ddr = ddr.group()
 					else:
-						if int(frequencia[:-3]) > 2132:
+						#if int(frequencia[:-3]) > 2132:
+						if frequencia > 2132:
 							ddr = 'DDR4'
 						else:
 							ddr = 'DDR3'
 					latencia = re.search(regexes['latencia'], nome)
 					if latencia:
-						latencia = re.sub(r'(CL?\s?)([1-9]+)','\2', latencia.group())
+						#latencia = re.sub(r'(CL?\s?)([1-9]+)','\2', latencia.group())
+						latencia = int(re.search(r'[1-9]([0-9]+)?',latencia.group()).group())
 					modelo = nome.split(' - ')[-1]
 					info_adicionais = nome.split(',')[0]
 					aux = normString(info_adicionais,marca)
 					if aux:
 						info_adicionais = aux
 					if frequencia:
-						info_adicionais = re.sub(frequencia, '', info_adicionais)
+						info_adicionais = re.sub(str(frequencia), '', info_adicionais)
 					info_adicionais = info_adicionais.split(' ')
 					info_adicionais = [i for i in info_adicionais if i.lower() != marca]
-					removables = [ddr, latencia, capacidade, modelo]			#mais comportados
+					removables = [ddr, 'CL' + str(latencia), capacidade, modelo]			#mais comportados
 					info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
 					p_list.append(Ram(site,
@@ -226,8 +230,9 @@ def manageProd(products,plist):
 				frequencia = re.search(regexes['frequencia'], nome)
 				if frequencia:
 					frequencia = frequencia.group()
+					mult = 1000 if re.search('GHz',frequencia,flags=re.IGNORECASE) else 1
+					frequencia = int(re.search(r'[1-9]([0-9]+)?', frequencia).group())*mult
 				###############prob????#######################
-				
 				integrada = False
 				if marca == 'intel':
 					integrada = re.search(regexes['integrada'][0], nome)
@@ -254,7 +259,7 @@ def manageProd(products,plist):
 					info_adicionais = aux
 				info_adicionais = info_adicionais.split(' ')
 				info_adicionais = [i for i in info_adicionais if i.lower() != marca]
-				removables = [frequencia, integrada, socket, modelo]			#mais comportados
+				removables = [str(frequencia), integrada, socket, modelo]			#mais comportados
 				info_adicionais = ' '.join([i for i in info_adicionais if i not in removables])
 
 				p_list.append(Cpu(site,
@@ -377,17 +382,8 @@ def manageProd(products,plist):
 					dimensoes = float(dimensoes)
 					ssd = re.search(r'ssd',nome,flags=re.IGNORECASE)
 					ssd = True if ssd else False
-#					if ssd:
-#						ssd = True
-#					else:
-#						ssd = False
-#								
 					sata = re.search(r'sata',nome,flags=re.IGNORECASE)
 					sata = True if sata else False
-#					if sata:
-#						sata = True
-#					else:
-#						sata = False
 
 					nvme = re.search(r'nvme',nome,flags=re.IGNORECASE)
 					if nvme:
@@ -434,15 +430,20 @@ def checker(prod_list):
 					product.updater(ddr='DDR4')
 			if not product.latencia:
 				if re.match(r'AX4U3(2|6)00(38|716)G1(6|8)A-D?CBK20',product.modelo):
-					product.updater(latencia='CL19')#' 19-19-19')
+					#product.updater(latencia='CL19')#' 19-19-19')
+					product.updater(latencia=19)
 				elif re.search(r'Memória\sGeil\sPotenza\sEVO(\sSuper\sLuce)?',product.modelo):
-					product.updater(latencia='CL16')#'-18-18-36')
+					#product.updater(latencia='CL16')#'-18-18-36')
+					product.updater(latencia=16)
 				elif re.match(r'OXY16S11/4G',product.modelo):
-					product.updater(latencia='CL9')
+					#product.updater(latencia='CL9')
+					product.updater(latencia=9)
 				elif re.match(r'OXY16LS11/4G',product.modelo):
-					product.updater(latencia='CL11')
+					#product.updater(latencia='CL11')
+					product.updater(latencia=11)
 				else:
-					product.updater(latencia='NCL')
+					#product.updater(latencia='NCL')
+					product.updater(latencia=0)
 
 
 	elif p_type == 'cpu':

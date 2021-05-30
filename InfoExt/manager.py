@@ -48,6 +48,8 @@ def manageProd(products,plist):
 	for product in products:
 		nome = re.sub(r'\s+$', '', product['nome'])
 		site = product['site']
+		img = product['img']
+
 		if not re.search(r'^((K|k)it|(S|s)uporte|(C|c)abo)|(F|f)Ita|(C|c)ase\s((M|m)ultilaser\s)?p(\/|ara)\sHD|(G|g)aveta|(A|a)daptador|(F|f)(ita|onte\s(E|e)stabilizada\s(C|c)haveada)', nome):#####conf
 			preco = product['preco']
 			desconto = product['preco_desconto']
@@ -86,11 +88,14 @@ def manageProd(products,plist):
 					if latencia:
 						#latencia = re.sub(r'(CL?\s?)([1-9]+)','\2', latencia.group())
 						latencia = int(re.search(r'[1-9]([0-9]+)?',latencia.group()).group())
+					else:
+						latencia = 0
 					modelo = nome.split(' - ')[-1]
 					info_adicionais = nome.split(',')[0]
 					aux = normString(info_adicionais,marca)
 					if aux:
 						info_adicionais = aux
+						
 					if frequencia:
 						info_adicionais = re.sub(str(frequencia), '', info_adicionais)
 					info_adicionais = info_adicionais.split(' ')
@@ -110,7 +115,8 @@ def manageProd(products,plist):
 											ddr,
 											latencia,
 											quantidade,
-											info_adicionais))
+											info_adicionais,
+											img))
 
 			elif p_type == 'gpu':
 				fabricante = exMarca(re.sub(r',',r' ',nome), pBrands)
@@ -127,6 +133,9 @@ def manageProd(products,plist):
 					vram = re.search(regexes['vram'][1], nome)
 				if vram:
 					vram = vram.group()
+
+				vram = vram.replace("G", "")
+				vram = vram.replace("B", "")
 
 				modelo = nome.split(' - ')[-1]
 				info_adicionais = nome.split(',')[0]
@@ -147,7 +156,8 @@ def manageProd(products,plist):
 										marca,
 										fabricante,
 										vram,
-										info_adicionais))
+										info_adicionais,
+										img))
 
 			elif p_type == 'mobo':
 				socket = re.search(regexes['socket'], nome)
@@ -213,7 +223,8 @@ def manageProd(products,plist):
 										socket,
 										tamanho,
 										ddr,
-										info_adicionais))
+										info_adicionais,
+										img))
 
 			elif p_type == 'cpu':
 				socket = re.search(regexes['socket'], nome)
@@ -272,7 +283,8 @@ def manageProd(products,plist):
 										socket,
 										frequencia,
 										integrada,
-										info_adicionais))
+										info_adicionais,
+										img))
 
 			elif p_type == 'psu':
 				potencia = re.search(regexes['potencia'],nome)
@@ -312,7 +324,8 @@ def manageProd(products,plist):
 										selo,
 										potencia,
 										modularidade,
-										info_adicionais))
+										info_adicionais,
+										img))
 
 			elif p_type == 'case':
 				#marca = exMarca(re.sub(r',',r' ',nome),[i for i in brands if i not in pBrands])
@@ -365,7 +378,8 @@ def manageProd(products,plist):
 										modelo,
 										marca,
 										tamanho,
-										info_adicionais))
+										info_adicionais,
+										img))
 
 			elif p_type == 'hd' or p_type == 'ssd':
 				if not re.search('(E|e)xterno|(^|\s)(C|c)ase\s|(D|d)ock|(D|d|N|n)(a|A)(s|S)',nome):					
@@ -419,7 +433,8 @@ def manageProd(products,plist):
 											ssd,
 											nvme,
 											sata,
-											info_adicionais))
+											info_adicionais,
+											img))
 
 def checker(prod_list):
 	p_type, p_list = prod_list

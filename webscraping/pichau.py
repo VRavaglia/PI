@@ -77,6 +77,7 @@ def pichau_listar_todos_por_tipo(tipo):
             
         for item in auxDadosPagina:
             item['preco_desconto'] = str(round(float(item['preco'])*0.88, 2))
+            item['img'] = '' # Adicionar funcionalidade depois
         
         for item in auxDadosPagina:
             auxDados.append(item)

@@ -75,7 +75,7 @@ def listar_todos_por_tipo(tipo):
         for produto in dados:
             cnt_pronduto = cnt_pronduto + 1
             if produto['disponibilidade']:
-                produtos.append({'nome': produto['nome'],'preco': produto['preco'], 'preco_desconto': produto['preco_desconto'], 'link': produto['link_descricao'], 'site': 'kabum.com.br'})
+                produtos.append({'nome': produto['nome'],'preco': produto['preco'], 'preco_desconto': produto['preco_desconto'], 'link': produto['link_descricao'], 'site': 'kabum.com.br', 'img': produto['img']})
 
         f.write(str(produtos))
         f.close()

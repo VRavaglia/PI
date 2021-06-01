@@ -21,10 +21,10 @@ def main_bypasser(option):
 
 def main():
 	print(sys.argv[1])
-	pecas = listar_todos_por_tipo('kabum', sys.argv[1])
+	pecas = listar_todos_por_tipo('pch', sys.argv[1])
 	pprint(pecas)
-	print(len(pecas))
-	#return pecas
+	# print(len(pecas))
+	return pecas
 
 if __name__ == "__main__":
 	main()

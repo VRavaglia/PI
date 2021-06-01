@@ -15,6 +15,7 @@ pichau_cooler_cpu = pichau_base + 'hardware/cooler-processador?'
 pichau_cooler_geral = pichau_base + 'hardware/ventoinhas-e-casemod?'
 pichau_hd = pichau_base + 'hardware/hard-disk-e-ssd?'
 pichau_ssd = pichau_base + 'hardware/ssd?'
+pichau_media_catalog = 'https://media.pichau.com.br/media/catalog/'
 
 DEBUG = True
 
@@ -65,6 +66,13 @@ def pichau_listar_todos_por_tipo(tipo):
             auxDadosPagina.append(dictDados)
             quantidade_pg += 1
         
+        img_url = []
+        for dados in soup.find_all('img'):
+            url = dados.get('src')
+            if pichau_media_catalog in url:
+                # print(url)
+                img_url.append(url)
+        
         if indisponiveis != 0:
             continuar = False
             auxDadosPagina = auxDadosPagina[:48-indisponiveis]
@@ -74,10 +82,12 @@ def pichau_listar_todos_por_tipo(tipo):
             precoBase = precos.get('data-price-amount')
             auxDadosPagina[index]['preco'] = precoBase
             index += 1
-            
+
+        index = 0  
         for item in auxDadosPagina:
             item['preco_desconto'] = str(round(float(item['preco'])*0.88, 2))
-            item['img'] = '' # Adicionar funcionalidade depois
+            item['img'] = img_url[index]
+            index += 1
         
         for item in auxDadosPagina:
             auxDados.append(item)

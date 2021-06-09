@@ -77,7 +77,7 @@ def manageProd(products,plist):
 						frequencia = int(re.search(r'[1-9]([0-9]+)?', frequencia).group())*mult
 					ddr = re.search(regexes['ddr'], nome)
 					if ddr:
-						ddr = ddr.group()
+						ddr = re.sub(r'L$', '', ddr.group())
 					else:
 						#if int(frequencia[:-3]) > 2132:
 						if frequencia > 2132:
@@ -190,7 +190,7 @@ def manageProd(products,plist):
 						tamanho = 'ATX'
 				ddr = re.search(regexes['ddr'], nome)
 				if ddr:
-					ddr = ddr.group()
+					ddr = re.sub(r'L$', '', ddr.group())
 				elif re.match(r'AM4|LGA\s?1200', str(socket)):
 					ddr = "DDR4"
 				if re.match(r'(asrock|msi|amd)',marca) and not ddr:

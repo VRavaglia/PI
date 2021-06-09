@@ -11,8 +11,9 @@
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
     "nodemon": "^2.0.7",
+    "package": "^1.0.1",
     "pg": "^8.5.1",
-    "sqlite3": "^5.0.1"
+    "sqlite3": "^5.0.2"
   },
   "name": "miner-dash",
   "version": "1.0.0",
